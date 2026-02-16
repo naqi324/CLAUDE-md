@@ -178,8 +178,7 @@
       "Bash(sudo rm -rf *)",
       "Bash(> /dev/sda*)",
       "Bash(dd if=*)",
-      "Bash(mkfs *)",
-      "Bash(:*)"
+      "Bash(mkfs *)"
     ]
   },
   "model": "us.anthropic.claude-opus-4-6-v1",

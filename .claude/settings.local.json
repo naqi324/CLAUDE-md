@@ -9,7 +9,8 @@
       "Bash(curl:*)",
       "Bash(brew install:*)",
       "Bash(gitleaks version:*)",
-      "Bash(pre-commit:*)"
+      "Bash(pre-commit:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
