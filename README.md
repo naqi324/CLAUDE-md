@@ -7,6 +7,7 @@ This repository contains global configuration files for Claude Code that can be 
 - `CLAUDE.md` - Global instructions and guidelines for Claude Code behavior
 - `.claude/settings.json` - Global settings including permissions and model preferences
 - `.claude/settings.local.json` - Local settings overrides (optional)
+- `scripts/setup-trust.sh` - Script to suppress workspace trust prompt
 
 ## Setup on a New Machine
 
@@ -26,6 +27,17 @@ To use these settings on a new machine:
 3. Optionally, copy local settings if needed:
    ```bash
    cp ~/git/_personal/CLAUDE-md/.claude/settings.local.json ~/.claude/
+   ```
+
+4. Enable workspace trust for your home directory (suppresses the startup trust prompt):
+   ```bash
+   chmod +x ~/git/_personal/CLAUDE-md/scripts/setup-trust.sh
+   ~/git/_personal/CLAUDE-md/scripts/setup-trust.sh
+   ```
+
+   You can also trust additional directories:
+   ```bash
+   ~/git/_personal/CLAUDE-md/scripts/setup-trust.sh /path/to/directory
    ```
 
 ## Updating Settings
@@ -73,3 +85,6 @@ Contains Claude Code configuration:
 
 ### settings.local.json
 Optional local overrides that are machine-specific and may not need to be synced.
+
+### scripts/setup-trust.sh
+Configures Claude Code to trust a workspace directory (defaults to `$HOME`), suppressing the trust confirmation prompt on startup. Modifies `~/.claude.json` using `jq`. Safe to run multiple times. Requires `jq` (`brew install jq`).
