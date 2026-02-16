@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(test:*)",
+      "Bash(brew --version:*)",
+      "Bash(node:*)",
+      "Bash(git config:*)",
+      "Bash(curl:*)",
+      "Bash(brew install:*)",
+      "Bash(gitleaks version:*)",
+      "Bash(pre-commit:*)"
+    ]
+  }
+}
