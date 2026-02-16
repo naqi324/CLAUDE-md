@@ -40,6 +40,12 @@
 - Handle errors explicitly — do not silently swallow exceptions
 - Remove dead code rather than commenting it out; Git preserves history
 
+## Permission Auto-Approval
+- Read-only and viewing commands are auto-approved (e.g., `git log`, `git diff`, `cat`, `ls`, `stat`, `id`)
+- This includes `git -C <path>` variants of all read-only git subcommands
+- Mutating commands (e.g., `git commit`, `git push`, `mkdir`, `cp`) are auto-approved but should be used with care
+- Destructive commands are denied (e.g., `git push --force`, `git reset --hard`, `rm -rf /`)
+
 ## Collaboration
 - Before making large architectural changes, outline the plan and confirm with the user
 - When modifying existing code, preserve the project's established patterns and style
