@@ -10,7 +10,19 @@
       "Bash(brew install:*)",
       "Bash(gitleaks version:*)",
       "Bash(pre-commit:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md log --oneline --all)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md remote:*)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md log:*)",
+      "Bash(/Users/naqi.khan/git/_personal/CLAUDE-md/scripts/setup-trust.sh)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md checkout -b feature/add-trust-setup-script)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md add:*)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md push -u origin feature/add-trust-setup-script)",
+      "Bash(gh pr create:*)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md status)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md checkout:*)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md pull)",
+      "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md branch -d feature/add-trust-setup-script)"
     ]
   }
 }
