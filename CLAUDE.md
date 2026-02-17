@@ -51,3 +51,49 @@
 - When modifying existing code, preserve the project's established patterns and style
 - Run existing linters, formatters, and test suites before proposing changes
 - When adding dependencies, prefer well-maintained libraries with active communities
+
+## Session Continuity
+
+Maintain session continuity so future sessions can resume where the last one left off. This uses two artifacts:
+
+1. **`## Session Context` in the project's CLAUDE.md** — a quick-reference snapshot of the current working state (overwritten each session, ~10-20 lines max)
+2. **`.claude/progress.md`** — a rolling detailed log with one entry per significant session
+
+### When to Update
+- At the end of meaningful work (not after trivial queries or quick lookups)
+- Before a session ends if significant progress was made
+- After completing a major task or reaching a decision point
+
+### Session Context (CLAUDE.md section)
+Update the `## Session Context` section at the bottom of the project's CLAUDE.md with:
+- Last session date
+- Brief summary of current work state (what was done, what's in progress)
+- Key decisions made and their reasoning
+- Open items, blockers, or next steps
+- Always overwrite the previous content — this is current state, not history
+
+### Progress Log (.claude/progress.md)
+Append a new dated entry to `.claude/progress.md` with:
+- Date and short title (e.g., `## 2026-02-16 -- Add authentication module`)
+- Work summary: what was accomplished
+- Decisions and reasoning: architectural choices, rejected alternatives
+- Non-obvious tools or commands used
+- Files created or significantly modified
+- Explicit next steps for the next session
+
+### What NOT to Log
+- Routine file reads or standard git operations
+- Obvious decisions any session would make identically
+- Full command outputs or error traces (summarize instead)
+- Exploratory dead ends (unless the dead end itself is informative)
+
+### Growth Management
+- Session Context: always overwritten, kept under 20 lines
+- progress.md: when exceeding ~200 lines, summarize older entries into a `## Historical Summary` section at the top and remove the detailed entries that were summarized
+
+## Session Context
+- **Last session**: 2026-02-16
+- **Current state**: Initial setup of session continuity protocol
+- **Work done**: Added `## Session Continuity` instructions and `## Session Context` to CLAUDE.md; created `.claude/progress.md`; updated README.md with feature documentation
+- **Decisions**: Two-tier approach (quick-reference in CLAUDE.md + detailed log in progress.md); progress.md tracked in git by default
+- **Next steps**: Use this protocol in future sessions; refine instructions based on practical experience
