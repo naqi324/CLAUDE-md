@@ -25,3 +25,14 @@
 - `.claude/progress.md`: append dated entry with title, summary, decisions, files modified, next steps
 - Skip logging routine reads, obvious decisions, or full command output
 - When progress.md exceeds ~200 lines, summarize older entries into a Historical Summary section
+
+## Session Context
+- Date: 2026-02-21
+- Work state: Added global Claude skill reconciliation and health checks; repaired improve-prompt availability aliasing.
+- Decisions:
+- Added `.claude/skills-manifest.json` as canonical mapping for global Claude skill symlinks.
+- Added `scripts/reconcile-skills.sh` and `scripts/check-skills-health.sh` to enforce and verify symlink integrity.
+- Kept both `improve-prompt-skill` and `prompt-improver` aliases pointing to `~/git/improve-prompt-skill/improve-prompt-skill` for compatibility.
+- Next steps:
+- Run health checks after future skill repo moves/renames.
+- Commit and push this branch after `gitleaks detect`.

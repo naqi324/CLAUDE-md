@@ -1,0 +1,40 @@
+{
+  "skills": [
+    {
+      "name": "improve-prompt-skill",
+      "source": "/Users/naqi.khan/git/improve-prompt-skill/improve-prompt-skill"
+    },
+    {
+      "name": "prompt-improver",
+      "source": "/Users/naqi.khan/git/improve-prompt-skill/improve-prompt-skill"
+    },
+    {
+      "name": "negotiate",
+      "source": "/Users/naqi.khan/git/voss-negotiation/negotiate"
+    },
+    {
+      "name": "tripit-itinerary",
+      "source": "/Users/naqi.khan/git/tripit/tripit-itinerary"
+    },
+    {
+      "name": "obsidian-vault-cli",
+      "source": "/Users/naqi.khan/git/obsidian-skill/obsidian-cli"
+    },
+    {
+      "name": "obsidian-cli",
+      "source": "/Users/naqi.khan/git/obsidian-skill/obsidian-cli"
+    },
+    {
+      "name": "skill-generator",
+      "source": "/Users/naqi.khan/git/skill-generator/skill-generator"
+    },
+    {
+      "name": "rewriter-skill",
+      "source": "/Users/naqi.khan/git/rewriter-skill"
+    },
+    {
+      "name": "web-browser-acquisition",
+      "source": "/Users/naqi.khan/git/chrome-cc-tools/skills/web-browser-acquisition-claude"
+    }
+  ]
+}

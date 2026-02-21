@@ -50,3 +50,31 @@
 **Next steps**:
 - Validate session continuity triggers correctly in a fresh session
 - Apply same deduplication pattern to other project CLAUDE.md files
+
+## 2026-02-21 -- Add Claude skill reconciliation and restore improve-prompt alias
+
+**Summary**: Added manifest-driven Claude skill symlink management and repaired the missing improve-prompt global alias.
+
+**What was done**:
+- Added `.claude/skills-manifest.json` to declare canonical global skill link targets.
+- Added `scripts/reconcile-skills.sh` to enforce global symlinks in `~/.claude/skills`.
+- Added `scripts/check-skills-health.sh` to validate symlink targets and required SKILL frontmatter.
+- Added compatibility alias coverage for both `improve-prompt-skill` and `prompt-improver` names.
+- Updated `README.md` and `CLAUDE.md` Session Context.
+
+**Design decisions**:
+- Keep alias compatibility to avoid breaking legacy trigger names after repo/path changes.
+- Use repository-local manifest as source of truth for global `~/.claude/skills` symlinks.
+- Fail health checks on missing links, bad targets, or malformed SKILL frontmatter.
+
+**Files modified**:
+- `CLAUDE.md`
+- `README.md`
+- `.claude/skills-manifest.json`
+- `.claude/progress.md`
+- `scripts/reconcile-skills.sh`
+- `scripts/check-skills-health.sh`
+
+**Next steps**:
+- Run `./scripts/reconcile-skills.sh` and `./scripts/check-skills-health.sh`.
+- Run `gitleaks detect --source . --no-git` before push.

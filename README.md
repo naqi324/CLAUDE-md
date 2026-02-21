@@ -104,3 +104,23 @@ Rolling session progress log. Each significant session appends a dated entry wit
 
 ### scripts/setup-trust.sh
 Configures Claude Code to trust a workspace directory (defaults to `$HOME`), suppressing the trust confirmation prompt on startup. Modifies `~/.claude.json` using `jq`. Safe to run multiple times. Requires `jq` (`brew install jq`).
+
+## Skills Reconciliation
+
+This repo now includes a manifest-driven workflow for global Claude custom skills.
+
+Manifest:
+
+- `.claude/skills-manifest.json`
+
+Commands:
+
+```bash
+cd ~/git/CLAUDE-md
+./scripts/reconcile-skills.sh
+./scripts/check-skills-health.sh
+```
+
+This ensures `~/.claude/skills` symlinks resolve to canonical local repositories.
+
+After reconciliation, restart Claude Code sessions to refresh available skills.
