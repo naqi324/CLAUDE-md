@@ -5,7 +5,12 @@
 
 
 # Permissions
-- You have full permissions to read, view, download, zip, unzip, retrieve, list, and analyze files across my system, and to access resources mentioned in this session and any other websites you need without prompting; only prompt me if you need to delete or edit a file.
+- You have full permissions to read, write, edit, create, delete, move, copy, and execute files across my system without prompting, unless the operation is destructive and irreversible (e.g., deleting a git repo, wiping a database, rm -rf on home directories).
+- Access any resources mentioned in this session and any websites you need without prompting.
+- Restart, stop, or manage local processes and services (Claude Desktop, launchctl agents, dev servers) without prompting.
+- Run any script in a project's `scripts/` directory without prompting.
+- Execute localhost HTTP requests without prompting.
+- Only prompt me for: irreversible destructive operations, actions with external cost/billing implications, or operations you are genuinely uncertain about.
 
 # Workflow
 - Present a plan before architectural changes and wait for approval
@@ -26,13 +31,29 @@
 - Skip logging routine reads, obvious decisions, or full command output
 - When progress.md exceeds ~200 lines, summarize older entries into a Historical Summary section
 
+# Error Self-Correction
+- When I correct a mistake you made, log it to `~/.claude/error-log.md` immediately
+- Entry format:
+  ```
+  ## YYYY-MM-DD — <short error title>
+  - **What went wrong**: <what you did incorrectly>
+  - **Correction**: <what the user told you to do instead>
+  - **Category**: <one of: wrong-command, wrong-file, wrong-assumption, misread-output, config-error, git-error, style-violation, other>
+  - **Lesson**: <one-sentence rule to prevent recurrence>
+  ```
+- At the start of each session, read `~/.claude/error-log.md` and apply all lessons
+- Before taking an action in a category with logged errors, check for applicable lessons first
+- When error-log.md exceeds ~100 entries, summarize older entries into a "Patterns" section at the top and remove individual entries older than 30 days
+
 ## Session Context
 - Date: 2026-02-21
-- Work state: Added global Claude skill reconciliation and health checks; repaired improve-prompt availability aliasing.
+- Work state: Reduced approval interruptions and added error self-correction logging to global Claude config.
 - Decisions:
-- Added `.claude/skills-manifest.json` as canonical mapping for global Claude skill symlinks.
-- Added `scripts/reconcile-skills.sh` and `scripts/check-skills-health.sh` to enforce and verify symlink integrity.
-- Kept both `improve-prompt-skill` and `prompt-improver` aliases pointing to `~/git/improve-prompt-skill/improve-prompt-skill` for compatibility.
+  - Analyzed 3 approval log files to identify 5 categories of unnecessary interruptions.
+  - Added `Write`, `Edit`, `NotebookEdit` and 24 Bash patterns to `~/.claude/settings.json` allow list.
+  - Added 10 safety deny entries for destructive home-dir/system operations.
+  - Replaced restrictive Permissions section with tiered auto-approve policy in both global and project CLAUDE.md.
+  - Added Error Self-Correction section with persistent `~/.claude/error-log.md` for cross-session learning.
 - Next steps:
-- Run health checks after future skill repo moves/renames.
-- Commit and push this branch after `gitleaks detect`.
+  - Validate reduced interruptions in a fresh session.
+  - Monitor error-log.md growth and pattern summarization.

@@ -19,7 +19,9 @@
       "Bash(git -C /Users/naqi.khan/git/_personal/CLAUDE-md check-ignore:*)",
       "Bash(git -C:*)",
       "Bash(obsidian version:*)",
-      "Bash(obsidian list-vaults:*)"
+      "Bash(obsidian list-vaults:*)",
+      "Bash(osascript:*)",
+      "Bash(head:*)"
     ]
   }
 }

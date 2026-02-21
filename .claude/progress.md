@@ -78,3 +78,32 @@
 **Next steps**:
 - Run `./scripts/reconcile-skills.sh` and `./scripts/check-skills-health.sh`.
 - Run `gitleaks detect --source . --no-git` before push.
+
+## 2026-02-21 -- Reduce approval interruptions and add error self-correction logging
+
+**Summary**: Analyzed 3 session approval logs, identified 5 categories of unnecessary interruptions, and upgraded both the global Claude config (`~/.claude/CLAUDE.md` + `~/.claude/settings.json`) to reduce prompting. Added a persistent error self-correction mechanism.
+
+**What was done**:
+- Analyzed `approvals-01.md`, `approvals-02.md`, `approvals-03.md` for interruption patterns.
+- Added 27 new entries to `~/.claude/settings.json` `permissions.allow` (Write, Edit, NotebookEdit, pkill, launchctl, rm, bash, sh, script execution, etc.).
+- Added 10 new entries to `permissions.deny` (destructive home-dir rm, system process kills, sudo).
+- Replaced Permissions section in both global and project CLAUDE.md with a tiered auto-approve policy.
+- Added Error Self-Correction section to both global and project CLAUDE.md.
+- Created `~/.claude/error-log.md` as persistent cross-session error log.
+
+**Design decisions**:
+- Tiered permission model: auto-approve everything except irreversible destructive ops, external cost/billing, and genuinely uncertain actions.
+- Error log uses category-based entries with lessons for cross-session learning.
+- Error log has growth management: summarize into Patterns section after ~100 entries, prune entries older than 30 days.
+- Deny list targets system-critical processes (loginwindow, WindowServer, Finder, Dock) and home directory rm -rf patterns.
+
+**Files modified**:
+- `~/.claude/CLAUDE.md` — replaced Permissions, added Error Self-Correction
+- `~/.claude/settings.json` — added 27 allow entries, 10 deny entries
+- `~/.claude/error-log.md` — created
+- `CLAUDE.md` — synced Permissions and Error Self-Correction, updated Session Context
+- `.claude/progress.md` — appended this entry
+
+**Next steps**:
+- Validate reduced interruptions in a fresh Claude Code session.
+- Monitor error-log.md accumulation and test pattern summarization trigger.
