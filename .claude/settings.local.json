@@ -21,7 +21,9 @@
       "Bash(obsidian version:*)",
       "Bash(obsidian list-vaults:*)",
       "Bash(osascript:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "Bash(pgrep:*)",
+      "Bash(echo Log files truncated:*)"
     ]
   }
 }
