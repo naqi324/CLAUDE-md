@@ -23,7 +23,8 @@
       "Bash(osascript:*)",
       "Bash(head:*)",
       "Bash(pgrep:*)",
-      "Bash(echo Log files truncated:*)"
+      "Bash(echo Log files truncated:*)",
+      "Bash(echo:*)"
     ]
   }
 }
