@@ -204,7 +204,33 @@
       "Bash(ps *)",
       "Bash(md5 *)",
       "Bash(shasum *)",
-      "Bash(sha256sum *)"
+      "Bash(sha256sum *)",
+      "Write",
+      "Edit",
+      "NotebookEdit",
+      "Bash(pkill *)",
+      "Bash(killall *)",
+      "Bash(launchctl *)",
+      "Bash(rm *)",
+      "Bash(rm -rf /tmp/*)",
+      "Bash(bash *)",
+      "Bash(sh *)",
+      "Bash(zsh *)",
+      "Bash(./*)",
+      "Bash(typeset *)",
+      "Bash(set *)",
+      "Bash(command *)",
+      "Bash(hash *)",
+      "Bash(test *)",
+      "Bash([ *)",
+      "Bash(swift *)",
+      "Bash(xcrun *)",
+      "Bash(xcodebuild *)",
+      "Bash(plutil *)",
+      "Bash(defaults *)",
+      "Bash(osascript *)",
+      "Bash(rev *)",
+      "Bash(sleep *)"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -220,9 +246,30 @@
       "Bash(sudo rm -rf *)",
       "Bash(> /dev/sda*)",
       "Bash(dd if=*)",
-      "Bash(mkfs *)"
+      "Bash(mkfs *)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf ~/*)",
+      "Bash(rm -rf ~/Documents*)",
+      "Bash(rm -rf ~/Desktop*)",
+      "Bash(pkill -9 loginwindow*)",
+      "Bash(pkill -9 WindowServer*)",
+      "Bash(killall Finder)",
+      "Bash(killall Dock)",
+      "Bash(launchctl bootout system*)",
+      "Bash(sudo *)"
     ]
   },
-  "model": "us.anthropic.claude-opus-4-6-v1",
-  "defaultMode": "default"
+  "model": "us.anthropic.claude-opus-4-6-v1[1m]",
+  "enabledPlugins": {
+    "atlassian@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true
+  },
+  "defaultMode": "default",
+  "mcpServers": {},
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  }
 }
