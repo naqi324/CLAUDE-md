@@ -75,6 +75,43 @@
   },
   "defaultMode": "default",
   "mcpServers": {},
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/approve-bash.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/llm-history/scripts/llm-history-save.sh",
+            "timeout": 120,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/llm-history/scripts/llm-history-save.sh",
+            "timeout": 120,
+            "async": true
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh"
