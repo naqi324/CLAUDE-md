@@ -12,6 +12,29 @@
 - Execute localhost HTTP requests without prompting.
 - Only prompt me for: irreversible destructive operations, actions with external cost/billing implications, or operations you are genuinely uncertain about.
 
+## Autonomy Rules (reduce unnecessary questions)
+- **Don't ask for implementation approach confirmation** -- when a plan has been approved, execute it. Make autonomous decisions on implementation details.
+- **Don't ask for credentials interactively** -- provide setup instructions and wait for the user to supply them. Don't ask multiple rounds of format questions.
+- **Don't ask about error handling strategy** -- when something fails, research alternatives and present a revised plan rather than asking "how do you want to proceed?"
+- **Don't ask about scope/features** -- implement what was requested. If the user asked for "email access", build all of: search, read, send, reply. Don't ask which subset.
+- **Autonomous testing** -- run tests, verify outputs, and iterate on fixes without asking "should I test this?"
+- **Autonomous git operations** -- commit, push, create branches without asking. Only pause before force-push or destructive git operations.
+- **Autonomous process management** -- restart services (Claude Desktop, dev servers, launchctl agents) without asking.
+- **Prefer action over questions** -- when 2+ reasonable approaches exist and none is clearly wrong, pick the best one and go. Only ask when the choice is truly irreversible or has major cost implications.
+
+# Search (QMD)
+- **Always use QMD MCP tools first** when searching for or locating content across the local machine. QMD indexes: git repos, Obsidian vault, OneDrive work files, Desktop, and Downloads.
+- Use `mcp__qmd__deep_search` for open-ended or exploratory queries (auto-expands, searches keyword + meaning, reranks).
+- Use `mcp__qmd__search` for exact keyword/phrase lookups.
+- Use `mcp__qmd__vector_search` for conceptual/semantic similarity when exact keywords may not match.
+- Use `mcp__qmd__get` and `mcp__qmd__multi_get` to retrieve full document content from QMD results.
+- Fall back to Glob, Grep, or Bash find **only** when:
+  - Searching within the current project's working tree for code-level patterns (function definitions, imports, variable references) where line-level precision matters.
+  - QMD returned no results and the content is expected to exist in the current project.
+  - The task requires filesystem-level operations (listing directory structure, checking file existence).
+- **Obsidian handoff**: When QMD results come from the `obsidian` collection (paths under the Obsidian vault or collection field is `obsidian`), use the `obsidian-cli` skill (Skill tool, `skill="obsidian-cli"`) for all subsequent read, edit, create, and task operations on those notes. Do not use raw file Read/Write/Edit on Obsidian vault files. If Obsidian is not running, use `mcp__qmd__get` for read-only access and inform the user that edits require Obsidian to be running.
+- Collections: `git` (source code/repos), `obsidian` (personal knowledge vault), `onedrive_hearst` (Hearst work files), `desktop` (staging), `downloads` (reference material).
+
 # Workflow
 - Present a plan before architectural changes and wait for approval
 - Run existing linters, formatters, and tests before proposing changes
@@ -30,6 +53,13 @@
 - `.claude/progress.md`: append dated entry with title, summary, decisions, files modified, next steps
 - Skip logging routine reads, obvious decisions, or full command output
 - When progress.md exceeds ~200 lines, summarize older entries into a Historical Summary section
+
+# LLM History (Session Context Preservation)
+- Before ending a session where meaningful work was done, proactively run `/llm-history` to save session context to the Obsidian vault.
+- When context window usage feels high or compaction has occurred, suggest saving with `/llm-history`.
+- When resuming work on a project, check `/Users/naqi.khan/Documents/Obsidian/LLM History/` for recent context files matching the project.
+- Hook-based auto-save (Stop and PreCompact) is a fallback — the `/llm-history` skill produces higher-quality output.
+- When offering proactively, say: "Want me to save session context before we wrap up? (`/llm-history`)"
 
 # Error Self-Correction
 - When I correct a mistake you made, log it to `~/.claude/error-log.md` immediately
