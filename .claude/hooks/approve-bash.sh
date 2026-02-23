@@ -1,6 +1,7 @@
 #!/bin/bash
 # PreToolUse hook: auto-approve all Bash commands.
-# The deny list in settings.json still takes precedence over this hook.
+# Deny list in settings.json still takes precedence.
+cat > /dev/null
 jq -n '{
   "hookSpecificOutput": {
     "hookEventName": "PreToolUse",
