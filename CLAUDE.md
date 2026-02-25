@@ -76,14 +76,13 @@
 - When error-log.md exceeds ~100 entries, summarize older entries into a "Patterns" section at the top and remove individual entries older than 30 days
 
 ## Session Context
-- Date: 2026-02-21
-- Work state: Reduced approval interruptions and added error self-correction logging to global Claude config.
+- Date: 2026-02-25
+- Work state: Added 59 MCP tool auto-approvals to global settings for Mail, Playwright, and Atlassian servers.
 - Decisions:
-  - Analyzed 3 approval log files to identify 5 categories of unnecessary interruptions.
-  - Added `Write`, `Edit`, `NotebookEdit` and 24 Bash patterns to `~/.claude/settings.json` allow list.
-  - Added 10 safety deny entries for destructive home-dir/system operations.
-  - Replaced restrictive Permissions section with tiered auto-approve policy in both global and project CLAUDE.md.
-  - Added Error Self-Correction section with persistent `~/.claude/error-log.md` for cross-session learning.
+  - Auto-approved all Mail tools (8): list, search, read, expand, send, reply, download, list_folders.
+  - Auto-approved all Playwright tools (22): full browser automation suite.
+  - Auto-approved all Atlassian tools (29): Confluence CRUD, Jira CRUD, search, transitions, worklogs.
+  - Write operations included per existing autonomy rules; CLAUDE.md instructions provide guardrails.
 - Next steps:
-  - Validate reduced interruptions in a fresh session.
-  - Monitor error-log.md growth and pattern summarization.
+  - Validate no approval prompts for MCP tools in a fresh session.
+  - Consider PreToolUse hook for auto-discovering new MCP tools (forward-compatible approach).
