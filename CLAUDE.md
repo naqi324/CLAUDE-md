@@ -22,7 +22,9 @@
 - **Autonomous process management** -- restart services (Claude Desktop, dev servers, launchctl agents) without asking.
 - **Prefer action over questions** -- when 2+ reasonable approaches exist and none is clearly wrong, pick the best one and go. Only ask when the choice is truly irreversible or has major cost implications.
 
-# Search (QMD)
+# Search
+
+## Local Search (QMD)
 - **Always use QMD MCP tools first** when searching for or locating content across the local machine. QMD indexes: git repos, Obsidian vault, OneDrive work files, Desktop, and Downloads.
 - Use `mcp__qmd__deep_search` for open-ended or exploratory queries (auto-expands, searches keyword + meaning, reranks).
 - Use `mcp__qmd__search` for exact keyword/phrase lookups.
@@ -34,6 +36,19 @@
   - The task requires filesystem-level operations (listing directory structure, checking file existence).
 - **Obsidian handoff**: When QMD results come from the `obsidian` collection (paths under the Obsidian vault or collection field is `obsidian`), use the `obsidian-cli` skill (Skill tool, `skill="obsidian-cli"`) for all subsequent read, edit, create, and task operations on those notes. Do not use raw file Read/Write/Edit on Obsidian vault files. If Obsidian is not running, use `mcp__qmd__get` for read-only access and inform the user that edits require Obsidian to be running.
 - Collections: `git` (source code/repos), `obsidian` (personal knowledge vault), `onedrive_hearst` (Hearst work files), `desktop` (staging), `downloads` (reference material).
+
+## Web Search (Brave + Exa)
+- **Use Brave Search and Exa MCP tools** for any task requiring current web information, external documentation, or content not indexed by QMD.
+- Use `mcp__brave-search__brave_web_search` for general web queries, current events, and broad information retrieval.
+- Use `mcp__brave-search__brave_news_search` for recent news and time-sensitive information.
+- Use `mcp__exa__web_search_exa` for semantic/meaning-based web search — especially useful for finding conceptually related content even when exact keywords differ.
+- Use `mcp__exa__get_code_context_exa` for finding code examples, library documentation, API references, and programming solutions.
+- Use `mcp__exa__company_research_exa` for business intelligence, company info, and competitive research.
+- **Search hierarchy for tasks requiring information lookup:**
+  1. QMD first (local docs, code, notes)
+  2. If not found locally or the query requires current/external info → Brave web search or Exa (pick based on query type)
+  3. Fall back to built-in `WebFetch` for fetching specific known URLs
+- **Parallel search**: When a task clearly needs both local and web results, run QMD and Brave/Exa searches in parallel.
 
 # Workflow
 - Present a plan before architectural changes and wait for approval
