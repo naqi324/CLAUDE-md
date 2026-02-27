@@ -50,6 +50,17 @@
   3. Fall back to built-in `WebFetch` for fetching specific known URLs
 - **Parallel search**: When a task clearly needs both local and web results, run QMD and Brave/Exa searches in parallel.
 
+## Google Workspace (Drive + Docs + Sheets + Gmail + Calendar)
+- Two servers: `google-workspace` (Gmail, Calendar, Contacts) and `google-docs` (Drive, Docs, Sheets).
+- **First-use auth**: Call `mcp__google-docs__auth_login` if needed; check with `mcp__google-docs__auth_status`.
+- **Drive**: `gdrive_search` to find files, `gdrive_list` to browse, `gdrive_info` for metadata.
+- **Docs**: Always `gdocs_read` before modifying. Use `gdocs_insert`, `gdocs_append`, or `gdocs_replace` for edits.
+- **Sheets**: Always `gsheets_read` before updating. Use `gsheets_batch_update` for bulk, `gsheets_append_row(s)` for adding.
+- **Gmail**: `list-emails` with Gmail search operators, `get-email` for full content, `send-email` for new messages.
+- **Calendar**: `list-events`/`search-events` for lookup, `create-event` for scheduling, `get-freebusy` for availability.
+- **Rules**: Never guess file IDs — always search first. Always read before modifying.
+- **Search integration**: When a task references docs/spreadsheets that might be in Google Drive, search Drive in parallel with QMD.
+
 # Workflow
 - Present a plan before architectural changes and wait for approval
 - Run existing linters, formatters, and tests before proposing changes
@@ -92,13 +103,14 @@
 
 ## Session Context
 - Date: 2026-02-27
-- Work state: Installed Brave Search and Exa MCP servers globally; updated search hierarchy in CLAUDE.md.
+- Work state: Installed Brave Search, Exa, and Google Workspace MCP servers globally.
 - Decisions:
-  - Added `brave-search` and `exa` MCP servers to `~/.claude/settings.json` with API keys.
-  - Auto-approved 9 new tools: 6 Brave (web, local, video, image, news, summarizer) + 3 Exa (web_search, code_context, company_research).
-  - Expanded Search section into tiered hierarchy: QMD (local) → Brave/Exa (web) → WebFetch (known URLs).
-  - Mirrored search instructions to both global and project CLAUDE.md.
+  - Brave + Exa for web search; Google Workspace for Gmail/Drive/Docs/Sheets.
+  - 2 Google servers: mcp-google (Gmail+Calendar+Contacts) + mcp-google-docs (Drive+Docs+Sheets).
+  - Shared OAuth credentials from GCP project "gcp-mcp" (gcp-mcp-488722).
+  - Auto-approved 51 new tools total (6 Brave + 3 Exa + 26 google-workspace + 16 google-docs).
+  - Search hierarchy: QMD (local) → Google Drive (cloud) → Brave/Exa (web) → WebFetch (URLs).
 - Next steps:
-  - Restart Claude Code to activate new MCP servers.
-  - Verify both servers connect and tools appear without approval prompts.
-  - Test search hierarchy with a web query to confirm Brave/Exa are used.
+  - Restart Claude Code to activate all new MCP servers.
+  - First use of Google tools triggers browser OAuth flow — authorize with naqi.khan@gmail.com.
+  - Verify all tools work without approval prompts.
