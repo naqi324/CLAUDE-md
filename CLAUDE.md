@@ -91,13 +91,14 @@
 - When error-log.md exceeds ~100 entries, summarize older entries into a "Patterns" section at the top and remove individual entries older than 30 days
 
 ## Session Context
-- Date: 2026-02-25
-- Work state: Added 59 MCP tool auto-approvals to global settings for Mail, Playwright, and Atlassian servers.
+- Date: 2026-02-27
+- Work state: Installed Brave Search and Exa MCP servers globally; updated search hierarchy in CLAUDE.md.
 - Decisions:
-  - Auto-approved all Mail tools (8): list, search, read, expand, send, reply, download, list_folders.
-  - Auto-approved all Playwright tools (22): full browser automation suite.
-  - Auto-approved all Atlassian tools (29): Confluence CRUD, Jira CRUD, search, transitions, worklogs.
-  - Write operations included per existing autonomy rules; CLAUDE.md instructions provide guardrails.
+  - Added `brave-search` and `exa` MCP servers to `~/.claude/settings.json` with API keys.
+  - Auto-approved 9 new tools: 6 Brave (web, local, video, image, news, summarizer) + 3 Exa (web_search, code_context, company_research).
+  - Expanded Search section into tiered hierarchy: QMD (local) → Brave/Exa (web) → WebFetch (known URLs).
+  - Mirrored search instructions to both global and project CLAUDE.md.
 - Next steps:
-  - Validate no approval prompts for MCP tools in a fresh session.
-  - Consider PreToolUse hook for auto-discovering new MCP tools (forward-compatible approach).
+  - Restart Claude Code to activate new MCP servers.
+  - Verify both servers connect and tools appear without approval prompts.
+  - Test search hierarchy with a web query to confirm Brave/Exa are used.
