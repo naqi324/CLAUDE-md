@@ -18,6 +18,14 @@ if [ ${#project_dir} -gt 40 ]; then
   project_dir="…${project_dir: -39}"
 fi
 
+# Git branch
+git_info=""
+raw_dir=$(echo "$input" | jq -r '.workspace.project_dir // ""')
+if [ -n "$raw_dir" ] && git -C "$raw_dir" rev-parse --short HEAD &>/dev/null; then
+  git_branch=$(git -C "$raw_dir" symbolic-ref --short HEAD 2>/dev/null)
+  [ -n "$git_branch" ] && git_info=" | ${git_branch%%/*}"
+fi
+
 # Convert duration_ms to Xm Ys
 total_seconds=$(( ${duration_ms%.*} / 1000 ))
 minutes=$(( total_seconds / 60 ))
@@ -45,7 +53,7 @@ fi
 reset=$'\033[0m'
 
 # Line 1
-printf "🔑 %s │ 📂 %s\n" "$session_short" "$project_dir"
+printf "🔑 %s │ 📂 %s%s\n" "$session_short" "$project_dir" "$git_info"
 
 # Line 2
 printf "🤖 %s v%s │ 🧠 ${bar_color}[%s]${reset} %.1f%% │ ⏱️  %dm %ds\n" "$model_name" "$version" "$bar" "$used_pct" "$minutes" "$seconds"
