@@ -22,3 +22,6 @@ token.json
 # Temporary files
 *.tmp
 *.log
+
+# Playwright MCP artifacts
+.playwright-mcp/
