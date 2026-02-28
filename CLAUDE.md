@@ -66,6 +66,26 @@
 - Run existing linters, formatters, and tests before proposing changes
 - When uncertain, present options with tradeoffs rather than guessing
 
+# Large Research Tasks
+
+When a task requires extensive research, multi-phase analysis, or will approach context limits:
+
+1. **Break work into file-based steps.** Each step writes a durable artifact to `.claude/` in the project (or `~/.claude/` for non-project work):
+   - `research-{topic}.md` — findings, sources, key data
+   - `analysis-{topic}.md` — decisions, trade-offs, architecture
+   - `plan-{topic}.md` — numbered steps with verification criteria
+   - Keep artifacts concise (<200 lines each). Summarize, don't dump raw output.
+
+2. **Write incrementally, not at the end.** After each logical phase completes, write its artifact to disk before starting the next phase. Never accumulate all findings in conversation context.
+
+3. **Resume from artifacts on interruption.** If a session starts and `.claude/research-*.md` or `.claude/analysis-*.md` files exist from prior work, read them first and resume from the next incomplete step. Do not re-run completed phases.
+
+4. **Use sub-agents for parallel research.** When multiple independent questions need answers, launch Explore agents in parallel. Each agent returns a summary; write combined findings to a single artifact file.
+
+5. **Compact proactively.** When context usage feels high, write current progress to an artifact file, then suggest `/compact` or `/llm-history`. After compaction, read the artifact to restore working state.
+
+6. **Clean up when done.** After the task completes and results are committed or delivered, remove interim `.claude/research-*` and `.claude/analysis-*` files. Keep only `progress.md` and final deliverables.
+
 # Git Safety
 - Never force-push to any branch
 - Run `gitleaks detect` before pushing
