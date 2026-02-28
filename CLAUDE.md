@@ -50,14 +50,14 @@
   3. Fall back to built-in `WebFetch` for fetching specific known URLs
 - **Parallel search**: When a task clearly needs both local and web results, run QMD and Brave/Exa searches in parallel.
 
-## Google Workspace (Drive + Docs + Sheets + Gmail + Calendar)
-- Single server: `google` (workspace-mcp) — covers Drive, Docs, Sheets, Gmail, Calendar, Contacts, Tasks.
-- **Auth**: One-time browser OAuth; tokens auto-refresh at `~/.google_workspace_mcp/credentials/`.
-- **Drive**: `search_drive_files` to find files, `create_drive_file`/`create_drive_folder` for new content, `get_drive_file_content` to read.
-- **Docs**: `create_doc` for new documents, `get_doc_content` to read, `modify_doc_text` to edit.
-- **Sheets**: `create_spreadsheet` for new sheets, `read_sheet_values` to read, `modify_sheet_values` to write.
-- **Gmail**: `search_gmail_messages` with Gmail operators, `get_gmail_message_content` for full content, `send_gmail_message` for new messages.
-- **Calendar**: `get_events`/`create_event` for scheduling, `list_calendars` for discovery.
+## Google Workspace (Drive + Docs + Sheets + Slides + Calendar)
+- Single server: `google` (@piotr-agier/google-drive-mcp) — 94 tools covering Drive, Docs, Sheets, Slides, Calendar.
+- **Auth**: One-time browser OAuth; tokens persist at `~/.config/google-drive-mcp/tokens.json` with auto-refresh.
+- **Drive**: `search` to find files, `createTextFile`/`createFolder` for new content, `downloadFile` to download, `listFolder` to browse.
+- **Docs**: `createGoogleDoc` for new documents, `readGoogleDoc`/`getGoogleDocContent` to read, `updateGoogleDoc`/`insertText` to edit.
+- **Sheets**: `createGoogleSheet` for new sheets, `getGoogleSheetContent` to read, `updateGoogleSheet`/`appendSpreadsheetRows` to write.
+- **Slides**: `createGoogleSlides` for new presentations, `getGoogleSlidesContent` to read, `updateGoogleSlides` to edit.
+- **Calendar**: `getCalendarEvents`/`createCalendarEvent` for scheduling, `listCalendars` for discovery.
 - **Rules**: Never guess file IDs — always search first. Always read before modifying. Use `create_*` tools for new files.
 - **Search integration**: When a task references docs/spreadsheets that might be in Google Drive, search Drive in parallel with QMD.
 
