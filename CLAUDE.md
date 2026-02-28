@@ -51,14 +51,14 @@
 - **Parallel search**: When a task clearly needs both local and web results, run QMD and Brave/Exa searches in parallel.
 
 ## Google Workspace (Drive + Docs + Sheets + Gmail + Calendar)
-- Two servers: `google-workspace` (Gmail, Calendar, Contacts) and `google-docs` (Drive, Docs, Sheets).
-- **First-use auth**: Call `mcp__google-docs__auth_login` if needed; check with `mcp__google-docs__auth_status`.
-- **Drive**: `gdrive_search` to find files, `gdrive_list` to browse, `gdrive_info` for metadata.
-- **Docs**: Always `gdocs_read` before modifying. Use `gdocs_insert`, `gdocs_append`, or `gdocs_replace` for edits.
-- **Sheets**: Always `gsheets_read` before updating. Use `gsheets_batch_update` for bulk, `gsheets_append_row(s)` for adding.
-- **Gmail**: `list-emails` with Gmail search operators, `get-email` for full content, `send-email` for new messages.
-- **Calendar**: `list-events`/`search-events` for lookup, `create-event` for scheduling, `get-freebusy` for availability.
-- **Rules**: Never guess file IDs — always search first. Always read before modifying.
+- Single server: `google` (workspace-mcp) — covers Drive, Docs, Sheets, Gmail, Calendar, Contacts, Tasks.
+- **Auth**: One-time browser OAuth; tokens auto-refresh at `~/.google_workspace_mcp/credentials/`.
+- **Drive**: `search_drive_files` to find files, `create_drive_file`/`create_drive_folder` for new content, `get_drive_file_content` to read.
+- **Docs**: `create_doc` for new documents, `get_doc_content` to read, `modify_doc_text` to edit.
+- **Sheets**: `create_spreadsheet` for new sheets, `read_sheet_values` to read, `modify_sheet_values` to write.
+- **Gmail**: `search_gmail_messages` with Gmail operators, `get_gmail_message_content` for full content, `send_gmail_message` for new messages.
+- **Calendar**: `get_events`/`create_event` for scheduling, `list_calendars` for discovery.
+- **Rules**: Never guess file IDs — always search first. Always read before modifying. Use `create_*` tools for new files.
 - **Search integration**: When a task references docs/spreadsheets that might be in Google Drive, search Drive in parallel with QMD.
 
 # Workflow
@@ -103,14 +103,15 @@
 
 ## Session Context
 - Date: 2026-02-27
-- Work state: Installed Brave Search, Exa, and Google Workspace MCP servers globally.
+- Work state: Replaced 2 Google MCP servers with single workspace-mcp; fixed schema proxy; fixed MCP config location.
 - Decisions:
-  - Brave + Exa for web search; Google Workspace for Gmail/Drive/Docs/Sheets.
-  - 2 Google servers: mcp-google (Gmail+Calendar+Contacts) + mcp-google-docs (Drive+Docs+Sheets).
-  - Shared OAuth credentials from GCP project "gcp-mcp" (gcp-mcp-488722).
-  - Auto-approved 51 new tools total (6 Brave + 3 Exa + 26 google-workspace + 16 google-docs).
-  - Search hierarchy: QMD (local) → Google Drive (cloud) → Brave/Exa (web) → WebFetch (URLs).
+  - Replaced mcp-google + mcp-google-docs with taylorwilsdon/google_workspace_mcp (workspace-mcp, 1.5k stars).
+  - Single `google` server via `uvx workspace-mcp --tool-tier core` covers Drive, Docs, Sheets, Gmail, Calendar, Contacts, Tasks (46 tools).
+  - Routed through `mcp-schema-proxy.mjs` (strips oneOf/allOf/anyOf); also used by brave-search.
+  - MCP servers configured in `~/.claude.json` (NOT settings.json) using `claude mcp add`.
+  - Auto-approved 55 tools: 6 Brave + 3 Exa + 46 Google.
+  - Tokens persist at `~/.google_workspace_mcp/credentials/` with auto-refresh.
 - Next steps:
-  - Restart Claude Code to activate all new MCP servers.
-  - First use of Google tools triggers browser OAuth flow — authorize with naqi.khan@gmail.com.
-  - Verify all tools work without approval prompts.
+  - Restart Claude Code; complete one-time OAuth for workspace-mcp.
+  - Verify token persistence across sessions (no re-auth).
+  - Test file creation: create_doc, create_spreadsheet, create_drive_file.
