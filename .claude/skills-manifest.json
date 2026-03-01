@@ -35,6 +35,10 @@
     {
       "name": "web-browser-acquisition",
       "source": "/Users/naqi.khan/git/chrome-cc-tools/skills/web-browser-acquisition-claude"
+    },
+    {
+      "name": "pptx-pro",
+      "source": "/Users/naqi.khan/git/pptx-tools/pptx-pro"
     }
   ]
 }
