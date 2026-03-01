@@ -101,11 +101,29 @@ When a task requires extensive research, multi-phase analysis, or will approach 
 
 3. **Resume from artifacts on interruption.** If a session starts and `.claude/research-*.md` or `.claude/analysis-*.md` files exist from prior work, read them first and resume from the next incomplete step. Do not re-run completed phases.
 
-4. **Use sub-agents for parallel research.** When multiple independent questions need answers, launch Explore agents in parallel. Each agent returns a summary; write combined findings to a single artifact file.
+4. **Use sub-agents for parallel research.** When multiple independent questions need answers, launch Explore agents in parallel. Each agent returns a summary; write combined findings to a single artifact file. If research feeds a large document, hand off to the "Large Document Generation" pattern below.
 
 5. **Compact proactively.** When context usage feels high, write current progress to an artifact file, then suggest `/compact` or `/llm-history`. After compaction, read the artifact to restore working state.
 
 6. **Clean up when done.** After the task completes and results are committed or delivered, remove interim `.claude/research-*` and `.claude/analysis-*` files. Keep only `progress.md` and final deliverables.
+
+# Large Document Generation
+
+When generating a document that will exceed ~500 lines or ~5 major sections (reports, specs, guides, proposals, documentation):
+
+1. **Create an outline first.** Write `.claude/draft-outline.md` with: document title, ordered section list (numbered `01`-`NN`), 1-2 sentence scope per section, and target output path. If sections have dependencies (e.g., Architecture depends on Requirements), note `depends_on: [NN]` in the outline.
+
+2. **Launch parallel section writers.** For each section, launch an Agent (subagent_type: general-purpose) in a **single message** for max concurrency. Each agent receives: the full outline, any research artifacts (`.claude/research-*.md`), and its assigned section number/title. Each agent **writes its section to `.claude/draft-sections/{NN}-{slug}.md` using the Write tool** — it must not return full content in its response, only a brief completion summary. For sections with dependencies, launch them after their dependencies complete, passing completed dependency files as additional context.
+
+3. **Assemble the final document.** After all agents complete, read section files in order and combine into the target output path. Add front matter, transitions between sections, and table of contents if appropriate.
+
+4. **Handle failures.** If an agent fails, retry only that section. Never re-run successful sections. After assembly, make a single coherence editing pass if needed.
+
+5. **Resume on interruption.** If `.claude/draft-outline.md` and `.claude/draft-sections/` exist, read both. Generate only missing or empty section files. Never restart from scratch.
+
+6. **Clean up.** After successful assembly and delivery, delete `.claude/draft-outline.md` and `.claude/draft-sections/`. The final document is the deliverable.
+
+7. **Chain with research.** For research-heavy documents, complete the "Large Research Tasks" pattern first, then feed those artifacts as input context to each section writer.
 
 # Git Safety
 - Never force-push to any branch
