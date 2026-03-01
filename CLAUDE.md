@@ -1,6 +1,6 @@
 # Preferences
 - Commit messages: imperative mood, atomic (one logical change per commit)
-- Use feature branches; never commit directly to main/master
+- Work on main branch by default; only create feature branches when explicitly requested or for large multi-session efforts
 - Remove dead code; never comment it out
 
 
@@ -65,6 +65,27 @@
 - Present a plan before architectural changes and wait for approval
 - Run existing linters, formatters, and tests before proposing changes
 - When uncertain, present options with tradeoffs rather than guessing
+
+# Git Workflow
+
+## Session Start
+- Check if CWD is a git repo. If not, run `git init`, create a safe `.gitignore` (covering .env*, *.pem, *.key, *.pfx, credentials.json, service-account*.json, token.json), and make an initial commit.
+- Verify `.gitignore` covers secrets before the first commit in any new repo.
+- If no remote exists, ask the user: "No remote configured. Want me to create a GitHub repo? (`gh repo create`)"
+- Use `gh auth status` to confirm GitHub CLI is authenticated before any `gh` commands.
+
+## During Session
+- Work on `main` branch. Only create feature branches when explicitly requested or for large multi-session efforts.
+- Commit frequently with meaningful imperative-mood messages.
+- Push to `origin main` after each logical commit if remote exists.
+
+## Session Exit (automated)
+- A Stop hook (`auto-git-commit.sh`) automatically commits any uncommitted changes and pushes to remote main on session exit. This is a safety net — prefer making explicit commits with good messages during the session.
+
+## Remote Repository
+- Never auto-create a GitHub remote — always prompt the user first.
+- Use `gh repo create --private --source=. --push` for new repos (default to private).
+- Use `gh repo create --public --source=. --push` only when user explicitly requests public.
 
 # Large Research Tasks
 

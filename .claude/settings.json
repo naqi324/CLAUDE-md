@@ -260,6 +260,12 @@
         "hooks": [
           {
             "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/auto-git-commit.sh",
+            "timeout": 30,
+            "async": true
+          },
+          {
+            "type": "command",
             "command": "/Users/naqi.khan/git/llm-history/scripts/llm-history-save.sh",
             "timeout": 120,
             "async": true
