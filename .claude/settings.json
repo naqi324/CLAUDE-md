@@ -255,6 +255,16 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/shell-profiles/zsh/ghostty-hook-title.sh"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
@@ -281,6 +291,16 @@
             "command": "/Users/naqi.khan/git/llm-history/scripts/llm-history-save.sh",
             "timeout": 120,
             "async": true
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/inject-datetime.sh"
           }
         ]
       }
