@@ -54,7 +54,10 @@ fi
 reset=$'\033[0m'
 
 # Line 1
-printf "🔑 %s │ 📂 %s%s\n" "$session_short" "$project_dir" "$git_info"
+printf "📂 %s%s\n" "$project_dir" "$git_info"
 
 # Line 2
 printf "🤖 %s v%s │ 🧠 ${bar_color}[%s]${reset} %.1f%% │ ⏱️  %dm %ds\n" "$model_name" "$version" "$bar" "$used_pct" "$minutes" "$seconds"
+
+# Line 3
+printf "🔑 %s\n" "$session_short"
