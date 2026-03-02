@@ -57,7 +57,7 @@ reset=$'\033[0m'
 printf "📂 %s%s\n" "$project_dir" "$git_info"
 
 # Line 2
-printf "🤖 %s v%s │ 🧠 ${bar_color}[%s]${reset} %.1f%% │ ⏱️  %dm %ds\n" "$model_name" "$version" "$bar" "$used_pct" "$minutes" "$seconds"
+printf "🤖 %s v%s │ 🧠 ${bar_color}[%s]${reset} %.1f%%\n" "$model_name" "$version" "$bar" "$used_pct"
 
 # Line 3
-printf "🔑 %s\n" "$session_short"
+printf "🔑 %s │ ⏱️  %dm %ds\n" "$session_short" "$minutes" "$seconds"
