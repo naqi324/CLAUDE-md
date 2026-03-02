@@ -4,6 +4,7 @@ input=$(cat)
 # Extract fields via jq
 session_id=$(echo "$input" | jq -r '.session_id // "—"')
 model_name=$(echo "$input" | jq -r '.model.display_name // "—"')
+model_name="${model_name#*claude-}"
 version=$(echo "$input" | jq -r '.version // "—"')
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir // "—"')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
