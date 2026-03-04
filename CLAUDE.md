@@ -26,9 +26,12 @@
 
 ## Local Search (QMD)
 - **Always use QMD MCP tools first** when searching for or locating content across the local machine. QMD indexes: git repos, Obsidian vault, OneDrive work files, Desktop, and Downloads.
-- Use `mcp__qmd__deep_search` for open-ended or exploratory queries (auto-expands, searches keyword + meaning, reranks).
-- Use `mcp__qmd__search` for exact keyword/phrase lookups.
-- Use `mcp__qmd__vector_search` for conceptual/semantic similarity when exact keywords may not match.
+- Use `mcp__qmd__query` for all QMD searches. Compose sub-queries by type:
+  - `type: "lex"` — BM25 keyword search for exact term/phrase lookups.
+  - `type: "vec"` — semantic vector search for conceptual/meaning-based queries.
+  - `type: "hyde"` — hypothetical document search (write what the answer looks like, 50-100 words).
+  - `type: "expand"` — auto-expand via LLM (max 1 per query) for unknown vocabulary.
+  - Combine multiple sub-queries for best results (e.g., lex + vec).
 - Use `mcp__qmd__get` and `mcp__qmd__multi_get` to retrieve full document content from QMD results.
 - Fall back to Glob, Grep, or Bash find **only** when:
   - Searching within the current project's working tree for code-level patterns (function definitions, imports, variable references) where line-level precision matters.
