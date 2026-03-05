@@ -242,15 +242,7 @@
       "Bash(chmod -R 777 /*)"
     ]
   },
-  "model": "us.anthropic.claude-opus-4-6-v1[1m]",
-  "enabledPlugins": {
-    "atlassian@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true
-  },
-  "defaultMode": "default",
-  "mcpServers": {},
+  "model": "global.anthropic.claude-opus-4-6-v1[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -318,5 +310,13 @@
     "type": "command",
     "command": "~/.claude/statusline.sh",
     "padding": 1
-  }
+  },
+  "enabledPlugins": {
+    "atlassian@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true
+  },
+  "defaultMode": "default",
+  "mcpServers": {}
 }
