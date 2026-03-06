@@ -90,9 +90,17 @@
 - Use `gh repo create --private --source=. --push` for new repos (default to private).
 - Use `gh repo create --public --source=. --push` only when user explicitly requests public.
 
-# Large Research Tasks
+# Research Tasks
 
-When a task requires extensive research, multi-phase analysis, or will approach context limits:
+## Pre-Flight (mandatory)
+
+Before starting ANY task involving research, analysis, report generation, or document creation:
+
+1. **Size the task.** Estimate: How many sources/searches will this need? How many sections in the output? Will the final artifact exceed ~200 lines? If YES to any → use the file-based pattern below from the start.
+2. **Default to file-based.** When uncertain about size, write artifacts to `.claude/` rather than holding findings in context. The cost of unnecessary files is near zero; the cost of running out of context is session failure.
+3. **Mid-task escalation.** If already working and the task grows beyond expectations (3+ searches done, draft exceeding ~150 lines, or context feeling heavy), STOP. Write current progress to `.claude/research-{topic}.md` before continuing.
+
+## Execution
 
 1. **Break work into file-based steps.** Each step writes a durable artifact to `.claude/` in the project (or `~/.claude/` for non-project work):
    - `research-{topic}.md` — findings, sources, key data
@@ -104,21 +112,21 @@ When a task requires extensive research, multi-phase analysis, or will approach 
 
 3. **Resume from artifacts on interruption.** If a session starts and `.claude/research-*.md` or `.claude/analysis-*.md` files exist from prior work, read them first and resume from the next incomplete step. Do not re-run completed phases.
 
-4. **Use sub-agents for parallel research.** When multiple independent questions need answers, launch Explore agents in parallel. Each agent returns a summary; write combined findings to a single artifact file. If research feeds a large document, hand off to the "Large Document Generation" pattern below.
+4. **Use sub-agents for parallel research.** When multiple independent questions need answers, launch Explore agents in parallel. Each agent returns a summary; write combined findings to a single artifact file. If research feeds a large document, hand off to the "Document Generation" pattern below.
 
 5. **Compact proactively.** When context usage feels high, write current progress to an artifact file, then suggest `/compact` or `/llm-history`. After compaction, read the artifact to restore working state.
 
 6. **Clean up when done.** After the task completes and results are committed or delivered, remove interim `.claude/research-*` and `.claude/analysis-*` files. Keep only `progress.md` and final deliverables.
 
-# Large Document Generation
+# Document Generation
 
-When generating a document that will exceed ~500 lines or ~5 major sections (reports, specs, guides, proposals, documentation):
+When generating a document with multiple sections (reports, specs, guides, proposals, documentation):
 
 1. **Create an outline first.** Write `.claude/draft-outline.md` with: document title, ordered section list (numbered `01`-`NN`), 1-2 sentence scope per section, and target output path. If sections have dependencies (e.g., Architecture depends on Requirements), note `depends_on: [NN]` in the outline.
 
 2. **Launch parallel section writers.** For each section, launch an Agent (subagent_type: general-purpose) in a **single message** for max concurrency. Each agent receives: the full outline, any research artifacts (`.claude/research-*.md`), and its assigned section number/title. Each agent **writes its section to `.claude/draft-sections/{NN}-{slug}.md` using the Write tool** — it must not return full content in its response, only a brief completion summary. For sections with dependencies, launch them after their dependencies complete, passing completed dependency files as additional context.
 
-3. **Assemble the final document.** After all agents complete, read section files in order and combine into the target output path. Add front matter, transitions between sections, and table of contents if appropriate.
+3. **Assemble incrementally, not all at once.** Never read all sections into context simultaneously. Write the first section to the output file, then append subsequent sections one at a time using Edit. This prevents context overflow during assembly.
 
 4. **Handle failures.** If an agent fails, retry only that section. Never re-run successful sections. After assembly, make a single coherence editing pass if needed.
 
@@ -126,7 +134,7 @@ When generating a document that will exceed ~500 lines or ~5 major sections (rep
 
 6. **Clean up.** After successful assembly and delivery, delete `.claude/draft-outline.md` and `.claude/draft-sections/`. The final document is the deliverable.
 
-7. **Chain with research.** For research-heavy documents, complete the "Large Research Tasks" pattern first, then feed those artifacts as input context to each section writer.
+7. **Chain with research.** For research-heavy documents, complete the "Research Tasks" pattern first, then feed those artifacts as input context to each section writer.
 
 # Git Safety
 - Never force-push to any branch
