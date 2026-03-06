@@ -16,6 +16,9 @@ STOP_HOOK_ACTIVE=$(echo "$INPUT" | jq -r '.stop_hook_active // false')
 [ -z "$CWD" ] && exit 0
 [ ! -d "$CWD" ] && exit 0
 
+# Guard: never init a repo in the top-level ~/git container directory
+[[ "$CWD" == "$HOME/git" ]] && exit 0
+
 cd "$CWD"
 
 # Init git repo if none exists
