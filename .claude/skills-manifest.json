@@ -1,12 +1,20 @@
 {
   "skills": [
     {
-      "name": "improve-prompt-skill",
-      "source": "/Users/naqi.khan/git/improve-prompt-skill/improve-prompt-skill"
+      "name": "browser-skill",
+      "source": "/Users/naqi.khan/git/chrome-cc-tools/skills/web-browser-acquisition-claude"
     },
     {
-      "name": "prompt-improver",
-      "source": "/Users/naqi.khan/git/improve-prompt-skill/improve-prompt-skill"
+      "name": "docx-edit",
+      "source": "/Users/naqi.khan/git/skills/docx-edit"
+    },
+    {
+      "name": "llm-history",
+      "source": "/Users/naqi.khan/git/llm-history"
+    },
+    {
+      "name": "mcg-pptx",
+      "source": "/Users/naqi.khan/git/pptx"
     },
     {
       "name": "negotiate",
@@ -25,20 +33,32 @@
       "source": "/Users/naqi.khan/git/obsidian-skill/obsidian-cli"
     },
     {
-      "name": "skill-generator",
-      "source": "/Users/naqi.khan/git/skill-generator/skill-generator"
+      "name": "prompt",
+      "source": "/Users/naqi.khan/git/prompt/prompt"
+    },
+    {
+      "name": "prompt-only",
+      "source": "/Users/naqi.khan/git/prompt/prompt-only"
+    },
+    {
+      "name": "prompt-refine",
+      "source": "/Users/naqi.khan/git/prompt/prompt-refine"
+    },
+    {
+      "name": "review-plan",
+      "source": "/Users/naqi.khan/git/prompt/review-plan"
     },
     {
       "name": "rewriter-skill",
       "source": "/Users/naqi.khan/git/rewriter-skill"
     },
     {
-      "name": "web-browser-acquisition",
-      "source": "/Users/naqi.khan/git/chrome-cc-tools/skills/web-browser-acquisition-claude"
+      "name": "skill-creator",
+      "source": "/Users/naqi.khan/.claude/skills/anthropic-skills/skills/skill-creator"
     },
     {
-      "name": "pptx-pro",
-      "source": "/Users/naqi.khan/git/pptx-tools/pptx-pro"
+      "name": "web-browser-acquisition",
+      "source": "/Users/naqi.khan/git/chrome-cc-tools/skills/web-browser-acquisition-claude"
     }
   ]
 }
