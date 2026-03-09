@@ -64,6 +64,13 @@
 - **Rules**: Never guess file IDs — always search first. Always read before modifying. Use `create_*` tools for new files.
 - **Search integration**: When a task references docs/spreadsheets that might be in Google Drive, search Drive in parallel with QMD.
 
+# Codex MCP
+- Claude Code reads MCP server definitions from `~/.claude.json`, not `~/.claude/settings.json`.
+- The global `codex` MCP server is routed through `/Users/naqi.khan/git/rewriter-skill/scripts/codex-mcp-safe-proxy.mjs`, which forwards to `codex mcp-server` and strips Claude-supplied OpenAI `model` overrides that are unsupported under ChatGPT-backed Codex login.
+- When using `mcp__codex__codex` or `mcp__codex__codex-reply`, omit explicit OpenAI `model` overrides unless they have been verified to work with the current `codex login status`.
+- Default Codex behavior should come from `~/.codex/config.toml`; on this machine that remains `model = "gpt-5.4"` with `model_reasoning_effort = "xhigh"`.
+- If Codex MCP fails with a model-related error, check `codex login status` and `claude mcp get codex` before retrying.
+
 # Workflow
 - Present a plan before architectural changes and wait for approval
 - Run existing linters, formatters, and tests before proposing changes
@@ -172,16 +179,13 @@ When generating a document with multiple sections (reports, specs, guides, propo
 - When error-log.md exceeds ~100 entries, summarize older entries into a "Patterns" section at the top and remove individual entries older than 30 days
 
 ## Session Context
-- Date: 2026-02-27
-- Work state: Replaced 2 Google MCP servers with single workspace-mcp; fixed schema proxy; fixed MCP config location.
+- Date: 2026-03-07
+- Work state: Added a Codex MCP safety proxy so Claude Code can use Codex reliably under the current ChatGPT-backed Codex login.
 - Decisions:
-  - Replaced mcp-google + mcp-google-docs with taylorwilsdon/google_workspace_mcp (workspace-mcp, 1.5k stars).
-  - Single `google` server via `uvx workspace-mcp --tool-tier core` covers Drive, Docs, Sheets, Gmail, Calendar, Contacts, Tasks (46 tools).
-  - Routed through `mcp-schema-proxy.mjs` (strips oneOf/allOf/anyOf); also used by brave-search.
-  - MCP servers configured in `~/.claude.json` (NOT settings.json) using `claude mcp add`.
-  - Auto-approved 55 tools: 6 Brave + 3 Exa + 46 Google.
-  - Tokens persist at `~/.google_workspace_mcp/credentials/` with auto-refresh.
+  - Confirmed Claude Code MCP server config lives in `~/.claude.json`, not `~/.claude/settings.json`.
+  - Repointed the global `codex` server to `/Users/naqi.khan/git/rewriter-skill/scripts/codex-mcp-safe-proxy.mjs`.
+  - Proxy strips Claude-supplied OpenAI `model` overrides before forwarding to `codex mcp-server`, preserving standalone Codex defaults in `~/.codex/config.toml`.
+  - Documented that explicit Codex model overrides should be omitted in Claude Code unless re-verified against the current `codex login status`.
 - Next steps:
-  - Restart Claude Code; complete one-time OAuth for workspace-mcp.
-  - Verify token persistence across sessions (no re-auth).
-  - Test file creation: create_doc, create_spreadsheet, create_drive_file.
+  - Restart any already-running Claude desktop session if it has cached the old MCP command.
+  - If Codex auth changes away from ChatGPT login, re-test whether the proxy is still required.

@@ -242,7 +242,7 @@
       "Bash(chmod -R 777 /*)"
     ]
   },
-  "model": "global.anthropic.claude-opus-4-6-v1[1m]",
+  "model": "us.anthropic.claude-opus-4-6-v1[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -318,5 +318,6 @@
     "code-simplifier@claude-plugins-official": true
   },
   "defaultMode": "default",
-  "mcpServers": {}
+  "mcpServers": {},
+  "effortLevel": "high"
 }

@@ -107,3 +107,27 @@
 **Next steps**:
 - Validate reduced interruptions in a fresh Claude Code session.
 - Monitor error-log.md accumulation and test pattern summarization trigger.
+
+## 2026-03-07 -- Make Claude Code use Codex MCP safely under ChatGPT login
+
+**Summary**: Added a Codex MCP safety proxy and repointed the global Claude `codex` server to it so Claude Code stops sending unsupported OpenAI model overrides to ChatGPT-backed Codex auth.
+
+**What was done**:
+- Confirmed `claude mcp get codex` was healthy but the failing path was Claude passing `model` values such as `gpt-5.4-xhigh`, `o3`, and `gpt-4.1` into `mcp__codex__codex`.
+- Added `scripts/codex-mcp-safe-proxy.mjs` in `rewriter-skill` to forward MCP traffic to `codex mcp-server` while stripping unsupported `model` overrides.
+- Added `scripts/verify-codex-mcp-safe-proxy.mjs` and used it for a live end-to-end smoke test against the real Codex backend.
+- Repointed the global Claude user-level `codex` server in `~/.claude.json` to the proxy with `claude mcp remove/add`.
+- Updated both `~/.claude/CLAUDE.md` and `CLAUDE.md` with Codex MCP guidance and the `~/.claude.json` source-of-truth note.
+
+**Design decisions**:
+- Keep the existing ChatGPT-backed Codex login rather than switching auth providers.
+- Strip explicit OpenAI model overrides at the MCP boundary instead of trusting Claude to omit them consistently.
+- Preserve standalone Codex defaults in `~/.codex/config.toml` rather than hardcoding model policy in the proxy.
+
+**Files modified**:
+- `CLAUDE.md`
+- `.claude/progress.md`
+
+**Next steps**:
+- Restart Claude desktop if it still has the old MCP command cached.
+- Re-run the verifier after any future Codex auth change or major Codex CLI upgrade.
