@@ -317,7 +317,7 @@
     "claude-md-management@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true
   },
-  "defaultMode": "default",
+  "defaultMode": "plan",
   "mcpServers": {},
   "effortLevel": "high"
 }

@@ -78,7 +78,7 @@
 
 # Git Workflow
 
-## Session Start
+## Git Initialization
 - Check if CWD is a git repo. If not, run `git init`, create a safe `.gitignore` (covering .env*, *.pem, *.key, *.pfx, credentials.json, service-account*.json, token.json), and make an initial commit.
 - Verify `.gitignore` covers secrets before the first commit in any new repo.
 - If no remote exists, ask the user: "No remote configured. Want me to create a GitHub repo? (`gh repo create`)"
@@ -97,11 +97,52 @@
 - Use `gh repo create --private --source=. --push` for new repos (default to private).
 - Use `gh repo create --public --source=. --push` only when user explicitly requests public.
 
+# Session Start
+
+On every new session, perform an orientation scan before engaging with the user's request.
+
+## Orientation Scan (automatic, every session)
+
+1. Read `~/.claude/error-log.md` and apply all logged lessons.
+2. Check for `.claude/working-state.md` in the current project. If it exists, interrupted work is in progress — read it.
+3. Check for `.claude/progress.md` in the current project. If it exists, read the most recent entry.
+4. Check for `## Session Context` at the bottom of the project's `CLAUDE.md`. If it exists, read it.
+5. Check `~/.claude/plans/` for plan files modified within the last 48 hours.
+6. Check for `.claude/research-*.md`, `.claude/analysis-*.md`, `.claude/draft-outline.md`, or `.claude/draft-sections/` — any indicate interrupted research or document generation.
+7. Check `/Users/naqi.khan/Documents/Obsidian/LLM History/` for recent context files matching the project.
+
+After scanning, present a brief orientation summary:
+- Artifacts found (file names and last-modified dates)
+- 2-3 sentence summary of where things left off
+- Recommended next steps
+
+If no artifacts are found, state that no prior session context was detected and proceed normally.
+
+## First Turn Behavior
+
+1. Start in planning mode (configured via `defaultMode: "plan"` in settings).
+2. When the user's first prompt is a task request (not a simple question, greeting, or continuation of prior work), invoke the `/prompt` skill to transform the raw input into a polished prompt before execution. Read the skill definition at `/Users/naqi.khan/.claude/skills/prompt/SKILL.md` and its reference files first, then execute the full 6-step workflow faithfully.
+3. If the orientation scan detected interrupted work, skip the `/prompt` skill invocation — present the orientation summary and proposed next steps as the plan instead.
+
+# Incremental Work Capture
+
+For any task estimated at 3+ tool calls, multi-step logic, multi-file changes, or any task that enters plan mode:
+
+1. **At task start**, write a brief task summary to `.claude/working-state.md` (create if it does not exist). Include: task description, planned phases, target files.
+2. **After each logical phase or milestone**, update `.claude/working-state.md` with: what was completed, key decisions made, what remains.
+3. **Before context-heavy operations** (large file reads, multi-agent launches, extensive search), checkpoint progress to `.claude/working-state.md` first.
+4. **When context feels high** or after a compaction event, update `.claude/working-state.md` and suggest `/compact` or `/llm-history`.
+5. **On task completion**, delete `.claude/working-state.md` and consolidate final state into `.claude/progress.md` and the project CLAUDE.md `## Session Context` per the Session Continuity section.
+
+For research and analysis tasks, continue using `.claude/research-*.md` and `.claude/analysis-*.md` artifact patterns from the Research Tasks section in addition to `working-state.md`.
+
+This applies to ALL medium+ tasks, not only research or document generation. Follow these steps automatically without user reminders.
+
 # Research Tasks
 
 ## Pre-Flight (mandatory)
 
-Before starting ANY task involving research, analysis, report generation, or document creation:
+Before starting ANY task involving research, analysis, report generation, or document creation (in addition to the Incremental Work Capture rules above):
 
 1. **Size the task.** Estimate: How many sources/searches will this need? How many sections in the output? Will the final artifact exceed ~200 lines? If YES to any → use the file-based pattern below from the start.
 2. **Default to file-based.** When uncertain about size, write artifacts to `.claude/` rather than holding findings in context. The cost of unnecessary files is near zero; the cost of running out of context is session failure.
