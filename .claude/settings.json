@@ -304,6 +304,17 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/qmd-setup/scripts/qmd-session-warmup.sh",
+            "timeout": 5
+          }
+        ]
+      }
     ]
   },
   "statusLine": {

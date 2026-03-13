@@ -28,3 +28,6 @@ token.json
 
 # Claude draft artifacts
 .claude/draft-sections/
+
+# Auto-generated session context
+.claude/local-context.md
