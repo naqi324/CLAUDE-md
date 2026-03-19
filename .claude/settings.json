@@ -329,6 +329,14 @@
     "code-simplifier@claude-plugins-official": true
   },
   "defaultMode": "plan",
-  "mcpServers": {},
+  "mcpServers": {
+    "qmd": {
+      "command": "/Users/naqi.khan/.local/share/mise/shims/node",
+      "args": [
+        "/Users/naqi.khan/git/qmd-setup/qmd/dist/cli/qmd.js",
+        "mcp"
+      ]
+    }
+  },
   "effortLevel": "high"
 }
