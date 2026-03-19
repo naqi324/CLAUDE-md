@@ -85,6 +85,15 @@
             "command": "/Users/naqi.khan/git/shell-profiles/zsh/ghostty-hook-title.sh"
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-review-gate.sh"
+          }
+        ]
       }
     ],
     "Stop": [
