@@ -13,7 +13,7 @@
       "Skill",
       "mcp__qmd__*",
       "mcp__mail__*",
-      "mcp__playwright__*",
+      "mcp__browser-mcp__*",
       "mcp__plugin_atlassian_atlassian__*",
       "mcp__brave-search__*",
       "mcp__exa__*",
@@ -107,7 +107,7 @@
           },
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/llm-history/scripts/llm-history-save.sh",
+            "command": "/Users/naqi.khan/git/skills/llm-history/scripts/llm-history-save.sh",
             "timeout": 120,
             "async": true
           }
@@ -119,7 +119,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/llm-history/scripts/llm-history-save.sh",
+            "command": "/Users/naqi.khan/git/skills/llm-history/scripts/llm-history-save.sh",
             "timeout": 120,
             "async": true
           }
@@ -141,7 +141,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/llm-history/scripts/llm-history-save.sh",
+            "command": "/Users/naqi.khan/git/skills/llm-history/scripts/llm-history-save.sh",
             "timeout": 120
           }
         ]
