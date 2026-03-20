@@ -28,14 +28,22 @@ SESSION_ID="${SESSION_ID:-${PPID:-default}}"
 case "$FILE_PATH" in
   */.claude/plans/*.md)
     GATE_FILE="/tmp/claude-plan-gate-${SESSION_ID}"
-    log "session=${SESSION_ID} path=${FILE_PATH} result=fired"
+    PLAN_PATH_FILE="/tmp/claude-plan-path-${SESSION_ID}"
+    echo "$FILE_PATH" > "$PLAN_PATH_FILE"
+    INNOVATION_MISSING=""
+    if [ -f "$FILE_PATH" ] && ! grep -qi '^##.*innovat' "$FILE_PATH" 2>/dev/null; then
+        INNOVATION_MISSING="WARNING: Plan file is MISSING a '## Innovation' section. The exit gate will BLOCK ExitPlanMode until this section exists. Add it before submitting."
+    fi
+    log "session=${SESSION_ID} path=${FILE_PATH} breadcrumb=${PLAN_PATH_FILE} result=fired"
     cat <<EOF
-PLAN REVIEW GATE — present AskUserQuestion before ExitPlanMode.
+${INNOVATION_MISSING:+${INNOVATION_MISSING}
+}PLAN REVIEW GATE — present AskUserQuestion before ExitPlanMode.
 Question: "How would you like to review this plan?"
 Options:
 1. Submit for approval — run: touch ${GATE_FILE} — then call ExitPlanMode
 2. Run /review-plan — invoke review-plan skill on plan file, then re-present this gate
 3. Comments + /review-plan — collect user comments, run review-plan with them, then re-present gate
+NOTE: ExitPlanMode validates that the plan contains a '## Innovation' heading. It will be BLOCKED if missing.
 EOF
     ;;
   *)
