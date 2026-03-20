@@ -10,6 +10,7 @@ log() { echo "[$(date -Iseconds)] $*" >> "$LOGFILE" 2>/dev/null; }
 trap 'log "ERROR in ${CWD:-unknown} at line $LINENO"' ERR
 
 INPUT=$(cat)
+log "START input_length=${#INPUT}"
 CWD=$(echo "$INPUT" | jq -r '.cwd // ""')
 STOP_HOOK_ACTIVE=$(echo "$INPUT" | jq -r '.stop_hook_active // false')
 
