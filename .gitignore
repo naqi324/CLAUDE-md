@@ -26,8 +26,5 @@ token.json
 # Playwright MCP artifacts
 .playwright-mcp/
 
-# Claude draft artifacts
-.claude/draft-sections/
-
 # Auto-generated session context
 .claude/local-context.md

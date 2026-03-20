@@ -7,7 +7,7 @@ This repository contains global configuration files for Claude Code that can be 
 - `CLAUDE.md` - Global instructions and guidelines for Claude Code behavior
 - `.claude/settings.json` - Global settings including permissions and model preferences
 - `.claude/settings.local.json` - Local settings overrides (optional)
-- `.claude/progress.md` - Rolling session progress log (session continuity)
+- `.state/progress.md` - Rolling session progress log (session continuity)
 - `scripts/setup-trust.sh` - Script to suppress workspace trust prompt
 
 ## Setup on a New Machine
@@ -73,11 +73,11 @@ This configuration includes a **session continuity protocol** that enables Claud
 
 1. **Updates `## Session Context`** in the project's `CLAUDE.md` with a quick-reference snapshot of the current working state (last session date, work summary, key decisions, next steps). This section is overwritten each session.
 
-2. **Appends to `.claude/progress.md`** with a detailed dated entry covering work accomplished, decisions and reasoning, files modified, and explicit next steps.
+2. **Appends to `.state/progress.md`** with a detailed dated entry covering work accomplished, decisions and reasoning, files modified, and explicit next steps.
 
 This means a new session can immediately understand where the last one left off without the user needing to re-explain context.
 
-The behavioral instructions live in the `## Session Continuity` section of `CLAUDE.md`. The global `~/.claude/CLAUDE.md` contains these instructions so they apply to all projects. Each project then gets its own `## Session Context` section and `.claude/progress.md` file.
+The behavioral instructions live in the `## Session Continuity` section of `CLAUDE.md`. The global `~/.claude/CLAUDE.md` contains these instructions so they apply to all projects. Each project then gets its own `## Session Context` section and `.state/progress.md` file.
 
 ## Files Explained
 
@@ -99,7 +99,7 @@ Contains Claude Code configuration:
 ### settings.local.json
 Optional local overrides that are machine-specific and may not need to be synced.
 
-### .claude/progress.md
+### .state/progress.md
 Rolling session progress log. Each significant session appends a dated entry with work summary, decisions, files modified, and next steps. When the file grows beyond ~200 lines, older entries are summarized into a Historical Summary section. Tracked in git by default.
 
 ### scripts/setup-trust.sh

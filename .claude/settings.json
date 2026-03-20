@@ -154,6 +154,11 @@
             "type": "command",
             "command": "/Users/naqi.khan/git/qmd-setup/scripts/qmd-session-warmup.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/.claude/hooks/ensure-state-gitignore.sh",
+            "timeout": 5
           }
         ]
       }
