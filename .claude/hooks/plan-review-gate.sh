@@ -39,10 +39,11 @@ case "$FILE_PATH" in
 ${INNOVATION_MISSING:+${INNOVATION_MISSING}
 }PLAN REVIEW GATE — present AskUserQuestion before ExitPlanMode.
 Question: "How would you like to review this plan?"
-Options:
+Options (present ALL four):
 1. Submit for approval — run: touch ${GATE_FILE} — then call ExitPlanMode
 2. Run /review-plan — invoke review-plan skill on plan file, then re-present this gate
-3. Comments + /review-plan — collect user comments, run review-plan with them, then re-present gate
+3. Incorporate innovation — revise plan to integrate innovation idea into implementation steps, then re-present gate
+4. Review + incorporate innovation — incorporate innovation AND run /review-plan, then re-present gate
 NOTE: ExitPlanMode validates that the plan contains a '## Innovation' heading. It will be BLOCKED if missing.
 EOF
     ;;

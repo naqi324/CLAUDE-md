@@ -45,10 +45,11 @@ GATE_FILE="/tmp/claude-plan-gate-${SESSION_ID}"
 # GATE_FILE_PLACEHOLDER is replaced with actual path before use.
 GATE_TEXT='PLAN REVIEW GATE — you MUST present AskUserQuestion before ExitPlanMode.
 Question: "How would you like to review this plan?"
-Options (present ALL three):
+Options (present ALL four):
 1. Submit for approval — run: touch GATE_FILE_PLACEHOLDER — then call ExitPlanMode
 2. Run /review-plan — invoke review-plan skill on plan file, then re-present this gate
-3. Comments + /review-plan — collect user comments, run review-plan with them, then re-present gate
+3. Incorporate innovation — revise plan to integrate innovation idea, then re-present gate
+4. Review + incorporate innovation — incorporate innovation AND run /review-plan, then re-present gate
 After /review-plan REVISE: revise plan, re-present gate. After APPROVE: note result, re-present gate.'
 GATE_TEXT=$(echo "$GATE_TEXT" | sed "s|GATE_FILE_PLACEHOLDER|${GATE_FILE}|g")
 
