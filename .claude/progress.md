@@ -131,3 +131,36 @@
 **Next steps**:
 - Restart Claude desktop if it still has the old MCP command cached.
 - Re-run the verifier after any future Codex auth change or major Codex CLI upgrade.
+
+## 2026-03-19 -- Fix Stop hook reliability and document --resume crash
+
+**Summary**: Fixed intermittent llm-history Stop hook failures by daemonizing the slow `claude -p` call into a detached worker process. Added SessionEnd fallback, error logging, and documented upstream `--resume` CLI bug.
+
+**What was done**:
+- Split `llm-history-save.sh` into fast dispatcher + detached `llm-history-worker.sh` via nohup
+- Changed dedup lock from `${SESSION_ID}-${HOOK_EVENT}.saved` to event-agnostic `${SESSION_ID}-save.saved`
+- Lock created in dispatcher before fork (eliminates race between Stop and SessionEnd)
+- Added SessionEnd hook to `~/.claude/settings.json` as belt-and-suspenders
+- Added `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS=130000` to `~/.zprofile`
+- Added error logging to all hook scripts (`/tmp/llm-history-hook.log`, `worker.log`, `auto-git-commit.log`)
+- Worker uses `timeout 90` on `claude -p` to prevent orphan accumulation
+- Worker handles missing `last_assistant_message` (unavailable on SessionEnd)
+- Documented `--resume` crash (upstream bug) and `--name` best practice in CLAUDE.md and error-log.md
+
+**Design decisions**:
+- Daemonize via nohup rather than making hook synchronous (avoids 60s exit delay)
+- Event-agnostic lock eliminates race between Stop and SessionEnd without needing coordination
+- Lock in dispatcher (not worker) closes the race window to near-zero
+
+**Files modified**:
+- `~/git/llm-history/scripts/llm-history-save.sh` — refactored into dispatcher
+- `~/git/llm-history/scripts/llm-history-worker.sh` — created (detached worker)
+- `.claude/hooks/auto-git-commit.sh` — added error logging
+- `~/.claude/settings.json` — added SessionEnd hook
+- `~/.zprofile` — added SessionEnd timeout env var
+- `~/.claude/CLAUDE.md` — added `--name` and `--resume` guidance
+- `~/.claude/error-log.md` — added `--resume` crash entry
+
+**Next steps**:
+- Test in fresh session: verify dispatcher logs, worker completes, LLM history entry appears
+- Stress test: close terminal mid-session, verify detached worker still completes
