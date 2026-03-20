@@ -87,7 +87,7 @@
         ]
       },
       {
-        "matcher": "Write",
+        "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
@@ -154,6 +154,17 @@
             "type": "command",
             "command": "/Users/naqi.khan/git/qmd-setup/scripts/qmd-session-warmup.sh",
             "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-exit-gate.sh"
           }
         ]
       }
