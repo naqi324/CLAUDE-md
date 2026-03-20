@@ -5,6 +5,10 @@
 
 set -euo pipefail
 
+LOGFILE="/tmp/auto-git-commit.log"
+log() { echo "[$(date -Iseconds)] $*" >> "$LOGFILE" 2>/dev/null; }
+trap 'log "ERROR in ${CWD:-unknown} at line $LINENO"' ERR
+
 INPUT=$(cat)
 CWD=$(echo "$INPUT" | jq -r '.cwd // ""')
 STOP_HOOK_ACTIVE=$(echo "$INPUT" | jq -r '.stop_hook_active // false')
@@ -76,4 +80,5 @@ if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "master" ]; then
   fi
 fi
 
+log "OK: committed in $CWD"
 exit 0
