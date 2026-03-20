@@ -168,6 +168,23 @@ result=$(echo '{"session_id":"test-s14"}' | "$PERM_HOOK" 2>/dev/null)
 test_contains "no breadcrumb → deny" "$result" '"deny"'
 test_contains "deny mentions no plan file" "$result" "No plan file"
 
+echo
+echo "Agent nudge hook (plan-mode-agent-nudge.sh):"
+
+NUDGE_HOOK="${HOOKS_DIR}/plan-mode-agent-nudge.sh"
+
+# Test 15: Explore agent → nudge fires
+result=$(echo '{"tool_input":{"subagent_type":"Explore"},"session_id":"test-s15"}' | "$NUDGE_HOOK" 2>/dev/null)
+test_contains "Explore agent → nudge fires" "$result" "PLAN MODE"
+
+# Test 16: Plan agent → nudge fires
+result=$(echo '{"tool_input":{"subagent_type":"Plan"},"session_id":"test-s16"}' | "$NUDGE_HOOK" 2>/dev/null)
+test_contains "Plan agent → nudge fires" "$result" "PLAN MODE"
+
+# Test 17: general-purpose agent → silent
+result=$(echo '{"tool_input":{"subagent_type":"general-purpose"},"session_id":"test-s17"}' | "$NUDGE_HOOK" 2>/dev/null)
+test_empty "general-purpose agent → silent" "$result"
+
 # Cleanup
 rm -f /tmp/claude-plan-gate-test-s* /tmp/claude-plan-path-test-s*
 rm -rf "$TEST_DIR" "$FAKE_JQ_DIR"
