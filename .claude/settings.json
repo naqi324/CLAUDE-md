@@ -94,6 +94,15 @@
             "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-review-gate.sh"
           }
         ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-mode-agent-nudge.sh"
+          }
+        ]
       }
     ],
     "Stop": [
