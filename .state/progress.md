@@ -164,3 +164,107 @@
 **Next steps**:
 - Test in fresh session: verify dispatcher logs, worker completes, LLM history entry appears
 - Stress test: close terminal mid-session, verify detached worker still completes
+
+## 2026-03-20 -- Repair config parity and harden plan-gate recovery
+
+**Summary**: Repaired the tracked/live Claude config mirror, implemented the unshipped AskUserQuestion gate marker flow from the handoff, and added parity/auditing utilities so future drift is detectable.
+
+**What was done**:
+- Replaced the stale tracked `CLAUDE.md` with the real live global Claude instructions and updated the Plan Review Gate / Plan Innovation Prompt sections to match the new recovery behavior.
+- Added `.claude/hooks/plan-gate-shared.sh` as the single source for the four gate options and exact AskUserQuestion parameter wording.
+- Added `.claude/hooks/plan-gate-asked.sh` and registered a new `PostToolUse` matcher for `AskUserQuestion` in `.claude/settings.json`.
+- Refactored `plan-exit-gate.sh` so the first deny path emits the directive AskUserQuestion recovery block, while the post-gate/no-flag path emits the shorter submit instruction.
+- Refactored `plan-review-gate.sh` and `inject-datetime.sh` to reuse the same exact parameter block as the deny path.
+- Expanded `test-plan-gate.sh` from 32 to 45 passing smoke tests, covering gate-marker creation, jq-less fallback for the new hook, directive wording, option order, shorter post-gate denial, and cleanup of the gate marker on allow.
+- Added `scripts/check-config-parity.sh` to diff repo/live `CLAUDE.md` and `.claude/settings.json` and verify repo hook targets exist.
+- Added `scripts/audit-plan-gate.sh` to summarize plan-gate compliance from `/tmp/plan-review-gate.log`.
+- Synced the live `~/.claude/CLAUDE.md` mirror to match the repaired tracked file; `~/.claude/settings.json` was already identical after the repo edit.
+
+**Validation**:
+- `sh .claude/hooks/test-plan-gate.sh` -> 45/45 passed
+- `./scripts/check-config-parity.sh` -> passed
+- `./scripts/audit-plan-gate.sh` -> runs successfully
+- Real CLI smoke test could not complete because local `claude -p` returned `Not logged in · Please run /login`
+
+**Files modified**:
+- `CLAUDE.md`
+- `README.md`
+- `.claude/settings.json`
+- `.claude/hooks/plan-exit-gate.sh`
+- `.claude/hooks/plan-review-gate.sh`
+- `.claude/hooks/inject-datetime.sh`
+- `.claude/hooks/test-plan-gate.sh`
+- `.claude/hooks/plan-gate-asked.sh`
+- `.claude/hooks/plan-gate-shared.sh`
+- `scripts/check-config-parity.sh`
+- `scripts/audit-plan-gate.sh`
+- `.state/progress.md`
+
+**Next steps**:
+- Log into the local `claude` CLI and rerun a sacrificial manual plan-mode smoke test.
+- Commit the repo changes once you are happy with the mirror contract and the new gate behavior.
+
+## 2026-03-20 -- Auto-approve read-only Slack MCP lookups
+
+**Summary**: Added a narrow Slack read-only allowlist to the global Claude permissions so Slack search/list/get/find operations stop prompting by default while Slack write and state-changing actions remain gated.
+
+**What was done**:
+- Added four Slack MCP permission patterns to the tracked repo mirror `.claude/settings.json`:
+  - `mcp__slack__slack_search_*`
+  - `mcp__slack__slack_list_*`
+  - `mcp__slack__slack_get_*`
+  - `mcp__slack__slack_find_user_by_email`
+- Applied the same four patterns to the live `~/.claude/settings.json` mirror.
+- Intentionally did not allow `mcp__slack__*`, so send/edit/delete/update/download/open-conversation/join-channel/admin actions still require approval.
+
+**Validation**:
+- Confirmed both settings files parse as valid JSON after the change.
+- Confirmed the repo and live settings mirrors now contain identical Slack allow entries.
+- Fresh-session behavioral verification still requires a new Claude shell session to load the updated settings.
+
+**Next steps**:
+- Start a fresh Claude shell session and verify `slack_search_messages`, `slack_list_channels`, `slack_get_channel_history`, and `slack_find_user_by_email` no longer prompt.
+- Confirm `slack_send_message`, `slack_update_message`, `slack_delete_message`, `slack_mark_read`, `slack_open_conversation`, and `slack_download_file` still prompt.
+
+## 2026-03-20 -- Formalize static read-only MCP policy
+
+**Summary**: Added a documented static read-only MCP classification policy and an audit utility so future partially gated MCP namespaces can be reviewed systematically instead of by ad hoc permission additions.
+
+**What was done**:
+- Documented the static read-only MCP rule in `README.md` and `CLAUDE.md`.
+- Defined safe-by-default verbs as `get_`, `list_`, `search_`, and `find_`.
+- Defined the non-safe-by-default verb set covering create/update/edit/delete/send/add/remove/upload/download/open/join/mark/set/archive/pin/unpin/complete/reply/share/move/copy/rename/convert actions.
+- Added `scripts/audit-mcp-readonly-policy.py` to inspect installed MCP servers from `~/.claude.json`, compare repo/live settings mirrors, and classify partially gated namespaces.
+- Wired Slack in as the reference partially gated namespace with current non-admin read-only coverage, admin read exclusions, and intentionally gated state-changing tools.
+
+**Validation**:
+- The audit script should show whole-server wildcards for `qmd`, `mail`, `browser-mcp`, `atlassian`, `brave-search`, `exa`, `google`, and `codex`.
+- The first audit run surfaced two uncovered safe read-only Slack tools: `slack_find_people` and `slack_find_conversations`.
+- Broadened the Slack read-only allow entry from `mcp__slack__slack_find_user_by_email` to `mcp__slack__slack_find_*` in both repo and live settings mirrors.
+- The final Slack section should show non-admin read-only tools as covered, admin reads as intentionally excluded, and state-changing tools as intentionally gated.
+
+**Next steps**:
+- Run `./scripts/audit-mcp-readonly-policy.py`.
+- If it reports an uncovered safe read-only tool in a partially gated namespace, add a targeted allow entry rather than widening the whole namespace.
+
+## 2026-03-20 -- Sync Slack MCP local override with global safe-read baseline
+
+**Summary**: Traced the remaining Slack approval prompts to a stale project-local Slack MCP override file and extended the MCP audit to catch local permission drift against the global safe-read baseline.
+
+**What was done**:
+- Confirmed the live global Slack allowlist already covered `mcp__slack__slack_search_*`, `mcp__slack__slack_list_*`, `mcp__slack__slack_get_*`, and `mcp__slack__slack_find_*`.
+- Found `/Users/naqi.khan/git/mcps/slack-mcp/.claude/settings.local.json` carrying an older exact-tool subset that did not include newer safe read-only Slack tools such as `slack_find_people`.
+- Replaced that local subset with the same four safe-read wildcards while preserving the intentional local exception for `mcp__slack__slack_open_conversation`.
+- Extended `scripts/audit-mcp-readonly-policy.py` to inspect known project-local `.claude/settings.json` and `.claude/settings.local.json` files and emit a drift warning when a local Slack policy is narrower than the global safe-read baseline.
+- Updated `README.md` and `CLAUDE.md` to document project-local MCP permission drift and the need to restart Claude shell sessions after permission changes.
+
+**Validation**:
+- Repo and live global `settings.json` still expose identical Slack wildcard allow entries.
+- The Slack MCP local settings file now includes the global safe-read wildcards plus the preserved explicit local exception.
+- `./scripts/audit-mcp-readonly-policy.py` now reports the Slack MCP local override as aligned instead of warning about a narrower local subset.
+- A fresh `claude --debug-file /tmp/claude-slack-startup.log -p "Reply with ok."` process launched in `/Users/naqi.khan/git/mcps/slack-mcp` loaded both the global Slack wildcard entries and the local override file in its startup snapshot.
+- The CLI still exited before a real tool invocation with `Not logged in · Please run /login`, so end-to-end live no-prompt verification is still blocked on Claude auth.
+
+**Next steps**:
+- Run `./scripts/audit-mcp-readonly-policy.py` and confirm the local override audit reports alignment.
+- Start a fresh Claude shell in `/Users/naqi.khan/git/mcps/slack-mcp` and verify `slack_find_people` no longer prompts.

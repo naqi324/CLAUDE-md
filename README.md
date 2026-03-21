@@ -1,117 +1,130 @@
 # Claude Code Global Settings
 
-This repository contains global configuration files for Claude Code that can be synced across multiple machines.
+This repository is the tracked mirror for the live global Claude Code configuration on this machine.
 
-## Contents
+## Mirror Contract
 
-- `CLAUDE.md` - Global instructions and guidelines for Claude Code behavior
-- `.claude/settings.json` - Global settings including permissions and model preferences
-- `.claude/settings.local.json` - Local settings overrides (optional)
-- `.state/progress.md` - Rolling session progress log (session continuity)
-- `scripts/setup-trust.sh` - Script to suppress workspace trust prompt
+These files are intended to stay in sync with the live `~/.claude` surfaces:
 
-## Setup on a New Machine
+- `CLAUDE.md` -> `~/.claude/CLAUDE.md`
+- `.claude/settings.json` -> `~/.claude/settings.json`
 
-To use these settings on a new machine:
+The hook scripts live in this repo under `.claude/hooks/`, and the mirrored `settings.json` points Claude Code at these repo paths directly. That means the repo checkout itself is part of the runtime configuration.
 
-1. Clone this repository:
+## Repo Contents
+
+- `CLAUDE.md` - tracked mirror of the live global Claude instructions
+- `.claude/settings.json` - tracked mirror of the live global Claude settings
+- `.claude/hooks/` - versioned hook scripts executed from repo paths
+- `.claude/skills-manifest.json` - canonical global Claude skill link targets
+- `.state/progress.md` - rolling session progress log
+- `scripts/check-config-parity.sh` - verifies repo/live mirror parity and hook target existence
+- `scripts/audit-plan-gate.sh` - summarizes plan-gate compliance from `/tmp/plan-review-gate.log`
+- `scripts/reconcile-skills.sh` - repairs `~/.claude/skills` symlinks from the manifest
+- `scripts/check-skills-health.sh` - validates skill links and required frontmatter
+- `scripts/setup-trust.sh` - suppresses the workspace trust prompt
+
+## Setup On A New Machine
+
+1. Clone the repo to the same path used by the mirrored settings:
+
    ```bash
-   git clone <repository-url> ~/git/_personal/CLAUDE-md
+   git clone <repository-url> ~/git/CLAUDE-md
    ```
 
-2. Copy the files to your Claude Code config directory:
+2. Copy the mirrored config surfaces into `~/.claude`:
+
    ```bash
-   cp ~/git/_personal/CLAUDE-md/CLAUDE.md ~/.claude/
-   cp ~/git/_personal/CLAUDE-md/.claude/settings.json ~/.claude/
+   cp ~/git/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
+   cp ~/git/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
    ```
 
-3. Optionally, copy local settings if needed:
+3. Optionally copy local overrides:
+
    ```bash
-   cp ~/git/_personal/CLAUDE-md/.claude/settings.local.json ~/.claude/
+   cp ~/git/CLAUDE-md/.claude/settings.local.json ~/.claude/settings.local.json
    ```
 
-4. Enable workspace trust for your home directory (suppresses the startup trust prompt):
+4. Keep the repo checkout at `~/git/CLAUDE-md` unless you also update the hook paths in `~/.claude/settings.json`. The runtime settings point at repo hook scripts such as `/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-exit-gate.sh`.
+
+5. Optionally trust your workspace root to suppress Claude's startup trust prompt:
+
    ```bash
-   chmod +x ~/git/_personal/CLAUDE-md/scripts/setup-trust.sh
-   ~/git/_personal/CLAUDE-md/scripts/setup-trust.sh
+   chmod +x ~/git/CLAUDE-md/scripts/setup-trust.sh
+   ~/git/CLAUDE-md/scripts/setup-trust.sh
    ```
 
-   You can also trust additional directories:
+## Keeping Repo And Live Config In Sync
+
+When you change the global config:
+
+1. Edit the repo copy for tracked assets and hook scripts.
+2. Sync the mirrored files into `~/.claude`:
+
    ```bash
-   ~/git/_personal/CLAUDE-md/scripts/setup-trust.sh /path/to/directory
+   cp ~/git/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
+   cp ~/git/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
    ```
 
-## Updating Settings
+3. Verify parity before committing:
 
-When you make changes to your local Claude Code settings that you want to persist:
-
-1. Copy the updated files back to the repository:
    ```bash
-   cp ~/.claude/CLAUDE.md ~/git/_personal/CLAUDE-md/
-   cp ~/.claude/settings.json ~/git/_personal/CLAUDE-md/.claude/
+   cd ~/git/CLAUDE-md
+   ./scripts/check-config-parity.sh
+   ./scripts/check-skills-health.sh
    ```
 
-2. Commit and push the changes:
-   ```bash
-   cd ~/git/_personal/CLAUDE-md
-   git add .
-   git commit -m "Update Claude settings"
-   git push
-   ```
+4. If you intentionally edited the live files first, copy them back into the repo before commit so the mirror remains true.
 
-## Security Note
+## Plan-Gate Diagnostics
 
-This repository excludes sensitive files via `.gitignore`. Never commit files containing:
-- API keys or tokens
-- Credentials or passwords
-- Private environment variables
-- Any `.env` files
+Plan review gate behavior is enforced by the versioned hooks under `.claude/hooks/`.
 
-## Session Continuity
+Useful commands:
 
-This configuration includes a **session continuity protocol** that enables Claude Code to maintain context across sessions. Each session automatically:
+```bash
+cd ~/git/CLAUDE-md
+sh .claude/hooks/test-plan-gate.sh
+./scripts/audit-plan-gate.sh
+```
 
-1. **Updates `## Session Context`** in the project's `CLAUDE.md` with a quick-reference snapshot of the current working state (last session date, work summary, key decisions, next steps). This section is overwritten each session.
+`audit-plan-gate.sh` reports, per session, whether a plan was written, whether innovation was present, whether the gate was shown, whether exit was allowed, and how many retries occurred.
 
-2. **Appends to `.state/progress.md`** with a detailed dated entry covering work accomplished, decisions and reasoning, files modified, and explicit next steps.
+## MCP Permission Policy
 
-This means a new session can immediately understand where the last one left off without the user needing to re-explain context.
+This repo uses a static MCP permission policy rather than a hook-based classifier.
 
-The behavioral instructions live in the `## Session Continuity` section of `CLAUDE.md`. The global `~/.claude/CLAUDE.md` contains these instructions so they apply to all projects. Each project then gets its own `## Session Context` section and `.state/progress.md` file.
+Default read-only MCP rule:
 
-## Files Explained
+- Safe-by-default verbs: `get_`, `list_`, `search_`, `find_`
+- Not safe-by-default: `create_`, `update_`, `edit_`, `delete_`, `send_`, `add_`, `remove_`, `upload_`, `download_`, `open_`, `join_`, `mark_`, `set_`, `archive_`, `pin_`, `unpin_`, `complete_`, `reply_`, `share_`, `move_`, `copy_`, `rename_`, `convert_`
 
-### CLAUDE.md
-Contains global instructions that Claude Code reads for all projects, including:
-- Naming conventions
-- Folder structure preferences
-- Documentation standards
-- Git workflow guidelines
-- Code quality principles
+Current policy intent:
 
-### settings.json
-Contains Claude Code configuration:
-- Blocked commands and security rules
-- Model preferences
-- Permission settings
-- Default modes
+- Whole-server wildcards remain allowed for `qmd`, `mail`, `browser-mcp`, `atlassian`, `brave-search`, `exa`, `google`, and `codex`
+- Partially gated namespaces should use explicit read-only allow entries only
+- Slack is the reference partially gated namespace: non-admin `search_*`, `list_*`, `get_*`, and `find_*` are allowed; admin reads and all state-changing actions remain gated
+- When you launch Claude inside an MCP repo, project-level `.claude/settings.json` or `.claude/settings.local.json` files can carry stale exact-tool allowlists that lag behind the global safe-read baseline
+- Permission changes require a fresh Claude shell session before the new allowlist is loaded into the startup permission snapshot
 
-### settings.local.json
-Optional local overrides that are machine-specific and may not need to be synced.
+Audit command:
 
-### .state/progress.md
-Rolling session progress log. Each significant session appends a dated entry with work summary, decisions, files modified, and next steps. When the file grows beyond ~200 lines, older entries are summarized into a Historical Summary section. Tracked in git by default.
+```bash
+cd ~/git/CLAUDE-md
+./scripts/audit-mcp-readonly-policy.py
+```
 
-### scripts/setup-trust.sh
-Configures Claude Code to trust a workspace directory (defaults to `$HOME`), suppressing the trust confirmation prompt on startup. Modifies `~/.claude.json` using `jq`. Safe to run multiple times. Requires `jq` (`brew install jq`).
+The audit reads installed MCP servers from `~/.claude.json`, inspects both repo and live settings mirrors, and reports:
+
+- whole-server approvals
+- covered read-only tools in partially gated namespaces
+- intentionally gated tools
+- uncovered safe read-only tools that may deserve new allow entries
+- drift warnings when a known MCP repo has a project-local override that is narrower than the global safe-read baseline
 
 ## Skills Reconciliation
 
-This repo now includes a manifest-driven workflow for global Claude custom skills.
-
-Manifest:
-
-- `.claude/skills-manifest.json`
+This repo includes a manifest-driven workflow for global Claude custom skills.
 
 Commands:
 
@@ -121,6 +134,15 @@ cd ~/git/CLAUDE-md
 ./scripts/check-skills-health.sh
 ```
 
-This ensures `~/.claude/skills` symlinks resolve to canonical local repositories.
+This keeps `~/.claude/skills` symlinks aligned with the canonical local repositories.
 
-After reconciliation, restart Claude Code sessions to refresh available skills.
+## Security Notes
+
+Never commit files containing:
+
+- API keys or tokens
+- credentials or passwords
+- private environment variables
+- `.env` files
+
+This repo is designed to track safe configuration and hook code, not secrets.
