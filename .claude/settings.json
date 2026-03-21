@@ -18,7 +18,11 @@
       "mcp__brave-search__*",
       "mcp__exa__*",
       "mcp__google__*",
-      "mcp__codex__*"
+      "mcp__codex__*",
+      "mcp__slack__slack_search_*",
+      "mcp__slack__slack_list_*",
+      "mcp__slack__slack_get_*",
+      "mcp__slack__slack_find_*"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -96,6 +100,15 @@
         ]
       },
       {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-gate-asked.sh"
+          }
+        ]
+      },
+      {
         "matcher": "Agent",
         "hooks": [
           {
@@ -105,28 +118,10 @@
         ]
       }
     ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/auto-git-commit.sh",
-            "timeout": 30,
-            "async": true
-          },
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/skills/llm-history/scripts/llm-history-save.sh",
-            "timeout": 120,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
+  "PreCompact": [
+    {
+      "hooks": [
+        {
             "type": "command",
             "command": "/Users/naqi.khan/git/skills/llm-history/scripts/llm-history-save.sh",
             "timeout": 120,
@@ -145,17 +140,17 @@
         ]
       }
     ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/skills/llm-history/scripts/llm-history-save.sh",
-            "timeout": 120
-          }
-        ]
-      }
-    ],
+  "SessionEnd": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "/Users/naqi.khan/git/skills/llm-history/scripts/exit-orchestrator.sh",
+          "timeout": 240
+        }
+      ]
+    }
+  ],
     "SessionStart": [
       {
         "hooks": [

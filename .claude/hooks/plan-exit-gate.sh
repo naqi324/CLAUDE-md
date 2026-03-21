@@ -1,19 +1,11 @@
 #!/bin/sh
 # PermissionRequest hook (matcher: ExitPlanMode): hard-block plan exit without review gate.
 # Validates: (1) plan file breadcrumb exists, (2) plan has ## Innovation heading,
-# (3) session-scoped flag file exists and is fresh. Denies with full gate spec on failure.
-# Tracks denial count and escalates message on repeated attempts.
-LOG="/tmp/plan-review-gate.log"
+# (3) the gate was presented or the submit flag exists, and (4) the flag is fresh.
+# Tracks denial count and escalates repeated retries.
 
-log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] PermReq $*" >> "$LOG" 2>/dev/null; }
-
-# Robust JSON field extraction: jq primary, grep/sed fallback.
-extract_json_field() {
-    local input="$1" field="$2" leaf
-    leaf="${field##*.}"
-    echo "$input" | jq -r ".${field} // \"\"" 2>/dev/null && return
-    echo "$input" | grep -o "\"${leaf}\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" | head -1 | sed 's/.*":[[:space:]]*"//;s/"$//' 2>/dev/null
-}
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+. "${SCRIPT_DIR}/plan-gate-shared.sh"
 
 # Produce valid deny JSON. jq primary; no-jq fallback flattens to single line.
 output_deny() {
@@ -38,33 +30,27 @@ increment_deny_count() {
     count=$((count + 1))
     echo "$count" > "$DENY_COUNT_FILE"
     if [ "$count" -ge 2 ]; then
-        echo "CRITICAL: This is ExitPlanMode denial #${count}. STOP retrying ExitPlanMode. Your NEXT action MUST be AskUserQuestion with the gate options below."
+        echo "CRITICAL: This is ExitPlanMode denial #${count}. STOP retrying ExitPlanMode. Follow the instruction below instead."
     fi
+}
+
+cleanup_stale_markers() {
+    find /tmp -name 'claude-plan-path-*' -mmin +60 -delete 2>/dev/null
+    find /tmp -name 'claude-gate-asked-*' -mmin +60 -delete 2>/dev/null
 }
 
 INPUT=$(cat)
 if [ -z "$INPUT" ]; then
-    log "session=unknown result=ERROR-empty-input-deny"
+    plan_gate_log "PermReq session=unknown result=ERROR-empty-input-deny"
     echo '{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"deny"}}}'
     exit 0
 fi
 
-SESSION_ID=$(extract_json_field "$INPUT" "session_id")
+SESSION_ID=$(plan_gate_extract_json_field "$INPUT" "session_id")
 SESSION_ID="${SESSION_ID:-${PPID:-default}}"
 GATE_FILE="/tmp/claude-plan-gate-${SESSION_ID}"
+GATE_ASKED_FILE="/tmp/claude-gate-asked-${SESSION_ID}"
 DENY_COUNT_FILE="/tmp/claude-gate-deny-count-${SESSION_ID}"
-
-# Gate text template — included in every deny message so the model can reconstruct the full gate.
-# GATE_FILE_PLACEHOLDER is replaced with actual path before use.
-GATE_TEXT='PLAN REVIEW GATE — you MUST present AskUserQuestion before ExitPlanMode.
-Question: "How would you like to review this plan?"
-Options (present ALL four):
-1. Submit for approval — run: touch GATE_FILE_PLACEHOLDER — then call ExitPlanMode
-2. Run /review-plan — invoke review-plan skill on plan file, then re-present this gate
-3. Incorporate innovation — revise plan to integrate innovation idea, then re-present gate
-4. Review + incorporate innovation — incorporate innovation AND run /review-plan, then re-present gate
-After /review-plan REVISE: revise plan, re-present gate. After APPROVE: note result, re-present gate.'
-GATE_TEXT=$(echo "$GATE_TEXT" | sed "s|GATE_FILE_PLACEHOLDER|${GATE_FILE}|g")
 
 # --- Read plan path from breadcrumb ---
 PLAN_PATH_FILE="/tmp/claude-plan-path-${SESSION_ID}"
@@ -74,47 +60,55 @@ PLAN_PATH=""
 # --- Check 1: Breadcrumb must exist and point to a real file ---
 if [ -z "$PLAN_PATH" ] || [ ! -f "$PLAN_PATH" ]; then
     ESCALATION=$(increment_deny_count)
-    log "session=${SESSION_ID} plan=NONE result=deny-no-breadcrumb"
+    plan_gate_log "PermReq session=${SESSION_ID} plan=NONE result=deny-no-breadcrumb"
     output_deny "${ESCALATION:+${ESCALATION}
 }BLOCKED: No plan file found for this session. Write your plan to a .claude/plans/*.md file first, then re-present the gate.
 
-${GATE_TEXT}"
-    find /tmp -name 'claude-plan-path-*' -mmin +60 -delete 2>/dev/null
+$(plan_gate_render_recovery_message "${GATE_FILE}")"
+    cleanup_stale_markers
     exit 0
 fi
 
 # --- Check 2: Innovation heading must exist (does NOT consume flag) ---
 if ! grep -qi '^##.*innovat' "$PLAN_PATH" 2>/dev/null; then
     ESCALATION=$(increment_deny_count)
-    log "session=${SESSION_ID} plan=${PLAN_PATH} result=deny-no-innovation"
+    plan_gate_log "PermReq session=${SESSION_ID} plan=${PLAN_PATH} result=deny-no-innovation"
     output_deny "${ESCALATION:+${ESCALATION}
 }BLOCKED: Plan file is missing a required '## Innovation' section. Add a heading like '## Innovation' to your plan with a concrete suggestion, then re-present the gate.
 
-${GATE_TEXT}"
-    find /tmp -name 'claude-plan-path-*' -mmin +60 -delete 2>/dev/null
+$(plan_gate_render_recovery_message "${GATE_FILE}")"
+    cleanup_stale_markers
     exit 0
 fi
-log "session=${SESSION_ID} plan=${PLAN_PATH} innovation=present"
+plan_gate_log "PermReq session=${SESSION_ID} plan=${PLAN_PATH} innovation=present"
 
 # --- Check 3: Flag file must exist and be fresh ---
 if [ -f "$GATE_FILE" ]; then
     AGE=$(( $(date +%s) - $(stat -f %m "$GATE_FILE" 2>/dev/null || echo 0) ))
     if [ "$AGE" -lt 600 ]; then
-        rm -f "$GATE_FILE" "$PLAN_PATH_FILE" "$DENY_COUNT_FILE"
-        log "session=${SESSION_ID} gate=${GATE_FILE} age=${AGE}s result=allow"
+        rm -f "$GATE_FILE" "$PLAN_PATH_FILE" "$GATE_ASKED_FILE" "$DENY_COUNT_FILE"
+        plan_gate_log "PermReq session=${SESSION_ID} gate=${GATE_FILE} age=${AGE}s result=allow"
         echo '{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
         exit 0
     fi
     rm -f "$GATE_FILE"
-    log "session=${SESSION_ID} gate=${GATE_FILE} age=${AGE}s result=deny-stale"
+    plan_gate_log "PermReq session=${SESSION_ID} gate=${GATE_FILE} age=${AGE}s result=deny-stale"
 fi
 
 # No flag or stale flag
 ESCALATION=$(increment_deny_count)
-log "session=${SESSION_ID} gate=${GATE_FILE} result=deny"
-output_deny "${ESCALATION:+${ESCALATION}
-}BLOCKED: ExitPlanMode requires the Plan Review Gate flag file.
+if [ -f "$GATE_ASKED_FILE" ]; then
+    plan_gate_log "PermReq session=${SESSION_ID} gate=${GATE_FILE} gate_asked=${GATE_ASKED_FILE} result=deny-submit"
+    output_deny "${ESCALATION:+${ESCALATION}
+}BLOCKED: ExitPlanMode requires the session-scoped submit flag file.
 
-${GATE_TEXT}"
-find /tmp -name 'claude-plan-path-*' -mmin +60 -delete 2>/dev/null
+$(plan_gate_render_submit_instruction "${GATE_FILE}")"
+else
+    plan_gate_log "PermReq session=${SESSION_ID} gate=${GATE_FILE} result=deny-no-gate-asked"
+    output_deny "${ESCALATION:+${ESCALATION}
+}BLOCKED: ExitPlanMode requires the Plan Review Gate AskUserQuestion.
+
+$(plan_gate_render_recovery_message "${GATE_FILE}")"
+fi
+cleanup_stale_markers
 exit 0
