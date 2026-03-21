@@ -185,8 +185,46 @@ test_contains "Plan agent → nudge fires" "$result" "PLAN MODE"
 result=$(echo '{"tool_input":{"subagent_type":"general-purpose"},"session_id":"test-s17"}' | "$NUDGE_HOOK" 2>/dev/null)
 test_empty "general-purpose agent → silent" "$result"
 
+echo
+echo "TTL and denial escalation:"
+
+# Test 18: Flag at 500s → allow (within 600s TTL)
+echo "$PLAN_WITH_INNOV" > /tmp/claude-plan-path-test-s18
+touch -t "$(date -v-500S '+%Y%m%d%H%M.%S' 2>/dev/null || date -d '500 seconds ago' '+%Y%m%d%H%M.%S' 2>/dev/null)" /tmp/claude-plan-gate-test-s18 2>/dev/null
+# Fallback: just use perl to set mtime 500s ago
+if [ ! -f /tmp/claude-plan-gate-test-s18 ]; then
+    touch /tmp/claude-plan-gate-test-s18
+    perl -e 'utime(time-500, time-500, "/tmp/claude-plan-gate-test-s18")' 2>/dev/null
+fi
+result=$(echo '{"session_id":"test-s18"}' | "$PERM_HOOK" 2>/dev/null)
+test_contains "flag at 500s → allow (within 600s TTL)" "$result" '"allow"'
+
+# Test 19: Flag at 700s → deny-stale (beyond 600s TTL)
+echo "$PLAN_WITH_INNOV" > /tmp/claude-plan-path-test-s19
+touch /tmp/claude-plan-gate-test-s19
+perl -e 'utime(time-700, time-700, "/tmp/claude-plan-gate-test-s19")' 2>/dev/null
+result=$(echo '{"session_id":"test-s19"}' | "$PERM_HOOK" 2>/dev/null)
+test_contains "flag at 700s → deny-stale" "$result" '"deny"'
+
+# Test 20: Denial count escalation — 2nd denial shows CRITICAL
+rm -f /tmp/claude-gate-deny-count-test-s20 /tmp/claude-plan-gate-test-s20
+echo "$PLAN_WITH_INNOV" > /tmp/claude-plan-path-test-s20
+# First denial
+echo '{"session_id":"test-s20"}' | "$PERM_HOOK" > /dev/null 2>&1
+# Second denial — should escalate
+result=$(echo '{"session_id":"test-s20"}' | "$PERM_HOOK" 2>/dev/null)
+test_contains "2nd denial → CRITICAL escalation" "$result" "CRITICAL"
+
+# Test 21: Allow path cleans up deny count file
+echo "$PLAN_WITH_INNOV" > /tmp/claude-plan-path-test-s21
+echo "3" > /tmp/claude-gate-deny-count-test-s21
+touch /tmp/claude-plan-gate-test-s21
+result=$(echo '{"session_id":"test-s21"}' | "$PERM_HOOK" 2>/dev/null)
+test_contains "allow after denials" "$result" '"allow"'
+test_file_absent "deny count cleaned on allow" "/tmp/claude-gate-deny-count-test-s21"
+
 # Cleanup
-rm -f /tmp/claude-plan-gate-test-s* /tmp/claude-plan-path-test-s*
+rm -f /tmp/claude-plan-gate-test-s* /tmp/claude-plan-path-test-s* /tmp/claude-gate-deny-count-test-s*
 rm -rf "$TEST_DIR" "$FAKE_JQ_DIR"
 
 echo
