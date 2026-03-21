@@ -19,10 +19,7 @@
       "mcp__exa__*",
       "mcp__google__*",
       "mcp__codex__*",
-      "mcp__slack__slack_search_*",
-      "mcp__slack__slack_list_*",
-      "mcp__slack__slack_get_*",
-      "mcp__slack__slack_find_*"
+      "mcp__slack__*"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -76,7 +73,13 @@
       "Bash(launchctl bootout system*)",
       "Bash(launchctl unload /System*)",
       "Bash(chmod -R 000 *)",
-      "Bash(chmod -R 777 /*)"
+      "Bash(chmod -R 777 /*)",
+      "mcp__slack__slack_send_message*",
+      "mcp__slack__slack_send_ephemeral*",
+      "mcp__slack__slack_delete_message*",
+      "mcp__slack__slack_update_message*",
+      "mcp__slack__slack_archive_channel*",
+      "mcp__slack__slack_upload_file*"
     ]
   },
   "model": "us.anthropic.claude-opus-4-6-v1[1m]",

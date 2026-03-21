@@ -39,6 +39,7 @@
 - On model-related errors: check `codex login status` and `claude mcp get codex` first.
 - **Read-only MCP policy**: use a static allowlist, not a classifier hook. Safe-by-default verbs are `get_`, `list_`, `search_`, `find_`. Do not auto-allow verbs such as `create_`, `update_`, `edit_`, `delete_`, `send_`, `add_`, `remove_`, `upload_`, `download_`, `open_`, `join_`, `mark_`, `set_`, `archive_`, `pin_`, `unpin_`, `complete_`, `reply_`, `share_`, `move_`, `copy_`, `rename_`, or `convert_` unless there is an explicit reason.
 - Use `~/git/CLAUDE-md/scripts/audit-mcp-readonly-policy.py` after installing or changing MCP servers to find uncovered safe read-only tools in partially gated namespaces.
+- **Slack exception**: `mcp__slack__*` is fully wildcarded in allow. Destructive ops (`send_message`, `delete_message`, `update_message`, `send_ephemeral`, `archive_channel`, `upload_file`) are deny-listed and still prompt. Other Slack write tools (reactions, bookmarks, pins, reminders, channel joins) pass through without prompt.
 - When you launch Claude inside an MCP repo, also inspect project-local `.claude/settings.json` and `.claude/settings.local.json`. A stale exact-tool allowlist there can reintroduce prompts even when the global safe-read baseline is broader.
 - After changing MCP permissions, start a fresh Claude shell and check the newest `~/.claude/debug/*` startup snapshot for the expected `mcp__...` allow entries.
 
