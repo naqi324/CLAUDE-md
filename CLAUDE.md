@@ -103,29 +103,5 @@ For multi-section documents (reports, specs, guides, proposals):
 - Each session: read error-log and apply lessons. Check for applicable lessons before repeating error categories.
 - When >100 entries: summarize older into Patterns section, remove >30 days old.
 
-# Plan Review Gate
-When you have finished writing the plan file and are about to submit for approval, ALWAYS present an AskUserQuestion to choose a review approach (this is choosing between approaches, not requesting plan approval):
-- Question: "How would you like to review this plan?"
-- Options (in order):
-  1. **Submit for approval** -- run the `touch` command from the most recent plan-review-gate hook message, then call ExitPlanMode
-  2. **Run /review-plan** -- invoke review-plan skill on the plan file (uses subagent for fresh-context since you authored the plan), then re-present this gate
-  3. **Incorporate innovation** -- revise the plan to integrate the innovation idea (from the `## Innovation` section) into the main implementation steps as a concrete new step or enhancement, then update the `## Innovation` section to note it was incorporated, then re-present this gate
-  4. **Review + incorporate innovation** -- first incorporate the innovation idea into the plan (as in option 3), then run /review-plan on the revised plan, then re-present this gate
-- Soft reminders and hard denies now use the same exact AskUserQuestion parameter block. Do not abbreviate labels, reorder options, or collapse descriptions.
-- NEVER call ExitPlanMode without presenting this gate first -- a PermissionRequest hook blocks ExitPlanMode unless the session-scoped submit flag file exists.
-- **After ExitPlanMode denial**: if the gate has not yet been presented in this session, the deny message provides the exact AskUserQuestion parameters to use next. If the gate has already been presented, the deny message switches to a shorter submit instruction telling you to run the `touch` command and then call ExitPlanMode.
-- **Gate-present marker**: a PostToolUse hook on `AskUserQuestion` records `/tmp/claude-gate-asked-${SESSION_ID}` only when the first question contains "review this plan". This marker is used only to choose the deny recovery path; the submit flag file is still what unlocks ExitPlanMode.
-- **Content validation**: the exit gate validates two things before allowing ExitPlanMode:
-  (a) a plan file breadcrumb exists (the plan must be written to `.claude/plans/*.md`), and
-  (b) the plan contains a `## Innovation` heading (case-insensitive match on `^##.*innovat`).
-  ExitPlanMode is BLOCKED if either check fails, even if the flag file exists. The flag file is NOT consumed on content validation failure.
-- **Innovation surfacing**: before presenting the gate AskUserQuestion, re-read the `## Innovation` section from the plan file and present it verbatim in your text response. This keeps the innovation idea adjacent to options 3 and 4.
-- **Incorporate semantics**: when incorporating innovation (options 3/4), revise the plan to add the innovation as a concrete implementation step or enhancement within the existing plan structure. Update the `## Innovation` section to say "Incorporated into plan above" (keep the heading so the exit gate validation still passes). Then re-present the gate.
-- Ordering: Plan Innovation Prompt fires first (it produces content written into the plan), then this gate fires (it controls the transition out of plan mode).
-
 # Plan Innovation Prompt
-At the end of every plan, answer: *"What's the single smartest and most radically innovative and accretive addition you could make to the [plan/project]?"* with a concrete, actionable suggestion. Mandatory for every plan.
-- **Required heading**: use `## Innovation` (or `## Innovation Prompt`, `## Innovation Addition` -- any `##` heading containing "Innovation" is accepted by the regex `^##.*innovat`).
-- **Hard enforcement**: the PermissionRequest hook on ExitPlanMode validates this heading exists in the plan file. ExitPlanMode is blocked until it does.
-- **After incorporation**: if options 3 or 4 integrate the innovation into the main plan, keep the heading and replace the body with `Incorporated into plan above`.
-- Place the section at the end of the plan file, after verification.
+At the end of every plan, include a `## Innovation` section answering: *"What's the single smartest and most radically innovative addition you could make to this plan?"* Keep it concrete and actionable.

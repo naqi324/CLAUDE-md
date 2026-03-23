@@ -19,7 +19,6 @@ The hook scripts live in this repo under `.claude/hooks/`, and the mirrored `set
 - `.claude/skills-manifest.json` - canonical global Claude skill link targets
 - `.state/progress.md` - rolling session progress log
 - `scripts/check-config-parity.sh` - verifies repo/live mirror parity and hook target existence
-- `scripts/audit-plan-gate.sh` - summarizes plan-gate compliance from `/tmp/plan-review-gate.log`
 - `scripts/reconcile-skills.sh` - repairs `~/.claude/skills` symlinks from the manifest
 - `scripts/check-skills-health.sh` - validates skill links and required frontmatter
 - `scripts/setup-trust.sh` - suppresses the workspace trust prompt
@@ -45,7 +44,7 @@ The hook scripts live in this repo under `.claude/hooks/`, and the mirrored `set
    cp ~/git/CLAUDE-md/.claude/settings.local.json ~/.claude/settings.local.json
    ```
 
-4. Keep the repo checkout at `~/git/CLAUDE-md` unless you also update the hook paths in `~/.claude/settings.json`. The runtime settings point at repo hook scripts such as `/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-exit-gate.sh`.
+4. Keep the repo checkout at `~/git/CLAUDE-md` unless you also update the hook paths in `~/.claude/settings.json`. The runtime settings point at repo hook scripts such as `/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/inject-datetime.sh`.
 
 5. Optionally trust your workspace root to suppress Claude's startup trust prompt:
 
@@ -75,20 +74,6 @@ When you change the global config:
    ```
 
 4. If you intentionally edited the live files first, copy them back into the repo before commit so the mirror remains true.
-
-## Plan-Gate Diagnostics
-
-Plan review gate behavior is enforced by the versioned hooks under `.claude/hooks/`.
-
-Useful commands:
-
-```bash
-cd ~/git/CLAUDE-md
-sh .claude/hooks/test-plan-gate.sh
-./scripts/audit-plan-gate.sh
-```
-
-`audit-plan-gate.sh` reports, per session, whether a plan was written, whether innovation was present, whether the gate was shown, whether exit was allowed, and how many retries occurred.
 
 ## MCP Permission Policy
 

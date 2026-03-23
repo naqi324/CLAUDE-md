@@ -94,24 +94,6 @@
         ]
       },
       {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-review-gate.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "AskUserQuestion",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-gate-asked.sh"
-          }
-        ]
-      },
-      {
         "matcher": "Agent",
         "hooks": [
           {
@@ -166,17 +148,6 @@
             "type": "command",
             "command": "/Users/naqi.khan/.claude/hooks/ensure-state-gitignore.sh",
             "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "ExitPlanMode",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-exit-gate.sh"
           }
         ]
       }
