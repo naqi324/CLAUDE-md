@@ -21,15 +21,16 @@
 - When multiple reasonable approaches exist and none is clearly wrong, pick the best one. Only ask when truly irreversible or high-cost.
 
 # Search
-- **Priority**: QMD first (local) -> Brave/Exa (web) -> WebFetch (known URLs). Run in parallel when both local+web needed.
+- **Priority**: QMD first (local) -> Brave (web, default) -> WebFetch (known URLs). Run in parallel when both local+web needed.
 - **QMD** (`mcp__qmd__query`): Default first step for ANY information need -- before web searches, before Grep, before asking the user. Indexes: git repos (4900+ files), Obsidian vault (830+ notes), OneDrive work files, Downloads.
   - Sub-queries: `lex` (BM25 keyword, supports `"exact phrases"` and `-negation`), `vec` (semantic), `hyde` (hypothetical doc, 50-100 words). Combine for best recall.
   - Always provide `intent` parameter. For unknown vocabulary, use a standalone natural-language query for auto-expansion.
   - Use `mcp__qmd__get`/`multi_get` for full content retrieval.
   - Obsidian results -> use `obsidian-cli` skill for edits. If Obsidian not running, `mcp__qmd__get` for read-only.
   - Fall back to Glob/Grep only for: in-project code patterns needing line precision, QMD returned nothing, or filesystem ops.
-- **Brave**: `brave_web_search` (general), `brave_news_search` (current events).
-- **Exa**: `web_search_exa` (semantic web), `get_code_context_exa` (code/APIs), `company_research_exa` (business intel).
+- **Brave** (default): `brave_web_search` (general), `brave_news_search` (current events). Use Brave for all web searches unless a specific Exa capability is needed.
+- **Exa** (supplementary): `web_search_exa` (semantic, use when Brave results lack depth), `get_code_context_exa` (code/API lookups), `company_research_exa` (business intel). Do not use Exa when Brave suffices.
+  - Routing: general/news -> Brave | code/API docs -> Exa `get_code_context_exa` | business intel -> Exa `company_research_exa` | Brave poor results -> retry with Exa `web_search_exa`.
 - **Google Workspace**: 94 tools via `mcp__google__*`. Never guess file IDs -- always search first. Always read before modifying. Search Drive in parallel with QMD when task references docs/spreadsheets.
 
 # Codex MCP
