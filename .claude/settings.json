@@ -19,7 +19,8 @@
       "mcp__exa__*",
       "mcp__google__*",
       "mcp__codex__*",
-      "mcp__slack__*"
+      "mcp__slack__*",
+      "mcp__teams__*"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -79,7 +80,17 @@
       "mcp__slack__slack_delete_message*",
       "mcp__slack__slack_update_message*",
       "mcp__slack__slack_archive_channel*",
-      "mcp__slack__slack_upload_file*"
+      "mcp__slack__slack_upload_file*",
+      "mcp__teams__teams_send_channel_message*",
+      "mcp__teams__teams_send_chat_message*",
+      "mcp__teams__teams_reply_to_message*",
+      "mcp__teams__teams_upload_file*",
+      "mcp__teams__teams_create_channel*",
+      "mcp__teams__teams_update_channel*",
+      "mcp__teams__teams_create_chat*",
+      "mcp__teams__teams_delete_message*",
+      "mcp__teams__teams_update_message*",
+      "mcp__teams__teams_archive_*"
     ]
   },
   "model": "us.anthropic.claude-opus-4-6-v1[1m]",
