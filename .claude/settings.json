@@ -162,6 +162,17 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/require-innovation.sh"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
