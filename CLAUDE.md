@@ -14,6 +14,7 @@
 - **deep-research** (`/deep-research`): Multi-round parallel research with adversarial challenge. Dispatches 3-5 agents per round to investigate from different angles, synthesizes into opinionated proposal, then challenges its own findings. Located at `~/.claude/skills/deep-research-skill/` (-> `~/git/skills/deep-research-skill/`; Codex copy at `~/.agents/skills/deep-research-skill`). Uses brave-search MCP + url-to-md + pdf-to-md.
 - **browser** (`/browser`): Unified browser automation -- fresh Chromium launch + existing Chrome tab connection via CDP. Located at `~/.claude/skills/browser-skill/` (-> `~/git/skills/browser/`). Uses `browser-mcp` MCP server (24 tools with `browser_*` prefix). Two modes: `browser_launch` for clean-state tasks, `browser_connect` for existing logged-in sessions. Runs in fork context.
 - **tripit-itinerary** (`/tripit-itinerary`): Creates formatted Google Doc itineraries from TripIt URLs or PDFs with flight durations, Google Maps links, and day-by-day structure. Located at `~/.claude/skills/tripit-itinerary/` (-> `~/git/skills/tripit-itinerary/`). No external deps -- uses Google Docs MCP tools.
+- **rewrite** (`/rewrite`): Rewrites draft text in the author's personal writing style. Supports email, doc, slack mode arguments. Located at `~/.claude/skills/rewrite/` (-> `~/git/skills/rewrite/`). Bundled style guide + email corpus.
 
 # Permissions & Autonomy
 - Full permissions for all file, process, and service operations without prompting. Run scripts, access resources/websites, manage services (Claude Desktop, launchctl, dev servers), execute localhost requests -- all without asking.
@@ -36,7 +37,7 @@
 
 # Codex MCP
 - MCP servers live in `~/.claude.json`, not `~/.claude/settings.json`.
-- Routed through safe proxy at `~/git/rewriter-skill/scripts/codex-mcp-safe-proxy.mjs` (strips unsupported model overrides).
+- Routed through safe proxy at `~/git/system/scripts/codex-mcp-safe-proxy.mjs` (strips unsupported model overrides).
 - Omit explicit OpenAI `model` overrides in `mcp__codex__codex`/`codex-reply`. Defaults from `~/.codex/config.toml`.
 - On model-related errors: check `codex login status` and `claude mcp get codex` first.
 - **Read-only MCP policy**: use a static allowlist, not a classifier hook. Safe-by-default verbs are `get_`, `list_`, `search_`, `find_`. Do not auto-allow verbs such as `create_`, `update_`, `edit_`, `delete_`, `send_`, `add_`, `remove_`, `upload_`, `download_`, `open_`, `join_`, `mark_`, `set_`, `archive_`, `pin_`, `unpin_`, `complete_`, `reply_`, `share_`, `move_`, `copy_`, `rename_`, or `convert_` unless there is an explicit reason.

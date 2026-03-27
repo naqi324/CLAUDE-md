@@ -49,8 +49,8 @@
       "source": "/Users/naqi.khan/git/skills/prompt/review-plan"
     },
     {
-      "name": "rewriter-skill",
-      "source": "/Users/naqi.khan/git/rewriter-skill"
+      "name": "rewrite",
+      "source": "/Users/naqi.khan/git/skills/rewrite"
     },
     {
       "name": "skill-creator",
