@@ -100,7 +100,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/shell-profiles/zsh/ghostty-hook-title.sh"
+            "command": "/Users/naqi.khan/git/system/shell-profiles/zsh/ghostty-hook-title.sh"
           }
         ]
       },
@@ -109,7 +109,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/plan-mode-agent-nudge.sh"
+            "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/plan-mode-agent-nudge.sh"
           }
         ]
       }
@@ -131,7 +131,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/inject-datetime.sh"
+            "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/inject-datetime.sh"
           }
         ]
       }
@@ -169,7 +169,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/require-innovation.sh"
+            "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/require-innovation.sh"
           }
         ]
       }

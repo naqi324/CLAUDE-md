@@ -28,29 +28,29 @@ The hook scripts live in this repo under `.claude/hooks/`, and the mirrored `set
 1. Clone the repo to the same path used by the mirrored settings:
 
    ```bash
-   git clone <repository-url> ~/git/CLAUDE-md
+   git clone <repository-url> ~/git/system/CLAUDE-md
    ```
 
 2. Copy the mirrored config surfaces into `~/.claude`:
 
    ```bash
-   cp ~/git/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
-   cp ~/git/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
+   cp ~/git/system/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
+   cp ~/git/system/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
    ```
 
 3. Optionally copy local overrides:
 
    ```bash
-   cp ~/git/CLAUDE-md/.claude/settings.local.json ~/.claude/settings.local.json
+   cp ~/git/system/CLAUDE-md/.claude/settings.local.json ~/.claude/settings.local.json
    ```
 
-4. Keep the repo checkout at `~/git/CLAUDE-md` unless you also update the hook paths in `~/.claude/settings.json`. The runtime settings point at repo hook scripts such as `/Users/naqi.khan/git/CLAUDE-md/.claude/hooks/inject-datetime.sh`.
+4. Keep the repo checkout at `~/git/system/CLAUDE-md` unless you also update the hook paths in `~/.claude/settings.json`. The runtime settings point at repo hook scripts such as `/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/inject-datetime.sh`.
 
 5. Optionally trust your workspace root to suppress Claude's startup trust prompt:
 
    ```bash
-   chmod +x ~/git/CLAUDE-md/scripts/setup-trust.sh
-   ~/git/CLAUDE-md/scripts/setup-trust.sh
+   chmod +x ~/git/system/CLAUDE-md/scripts/setup-trust.sh
+   ~/git/system/CLAUDE-md/scripts/setup-trust.sh
    ```
 
 ## Keeping Repo And Live Config In Sync
@@ -61,14 +61,14 @@ When you change the global config:
 2. Sync the mirrored files into `~/.claude`:
 
    ```bash
-   cp ~/git/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
-   cp ~/git/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
+   cp ~/git/system/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
+   cp ~/git/system/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
    ```
 
 3. Verify parity before committing:
 
    ```bash
-   cd ~/git/CLAUDE-md
+   cd ~/git/system/CLAUDE-md
    ./scripts/check-config-parity.sh
    ./scripts/check-skills-health.sh
    ```
@@ -95,7 +95,7 @@ Current policy intent:
 Audit command:
 
 ```bash
-cd ~/git/CLAUDE-md
+cd ~/git/system/CLAUDE-md
 ./scripts/audit-mcp-readonly-policy.py
 ```
 
@@ -114,7 +114,7 @@ This repo includes a manifest-driven workflow for global Claude custom skills.
 Commands:
 
 ```bash
-cd ~/git/CLAUDE-md
+cd ~/git/system/CLAUDE-md
 ./scripts/reconcile-skills.sh
 ./scripts/check-skills-health.sh
 ```
