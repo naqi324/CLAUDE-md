@@ -152,7 +152,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/qmd-setup/scripts/qmd-session-warmup.sh",
+            "command": "/Users/naqi.khan/git/mcps/qmd/scripts/qmd-session-warmup.sh",
             "timeout": 5
           },
           {
