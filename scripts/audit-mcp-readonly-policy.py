@@ -17,7 +17,7 @@ from fnmatch import fnmatch
 from pathlib import Path
 
 
-REPO_ROOT = Path("/Users/naqi.khan/git/CLAUDE-md")
+REPO_ROOT = Path(__file__).resolve().parent.parent
 REPO_SETTINGS = REPO_ROOT / ".claude/settings.json"
 LIVE_SETTINGS = Path("/Users/naqi.khan/.claude/settings.json")
 CLAUDE_JSON = Path("/Users/naqi.khan/.claude.json")

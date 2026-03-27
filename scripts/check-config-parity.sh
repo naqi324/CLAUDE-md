@@ -41,7 +41,7 @@ check_hook_targets() {
     jq -r '.. | objects | select(has("command")) | .command' "$settings_file" > "$targets_file"
     while IFS= read -r command; do
         case "$command" in
-            /Users/naqi.khan/git/CLAUDE-md/.claude/hooks/*)
+            "$REPO_DIR"/.claude/hooks/*)
                 if [ -e "$command" ]; then
                     printf "PASS: hook target exists: %s\n" "$command"
                 else
