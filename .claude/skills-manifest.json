@@ -18,7 +18,7 @@
     },
     {
       "name": "negotiate",
-      "source": "/Users/naqi.khan/git/voss-negotiation/negotiate"
+      "source": "/Users/naqi.khan/git/skills/negotiate"
     },
     {
       "name": "tripit-itinerary",
@@ -34,19 +34,19 @@
     },
     {
       "name": "prompt",
-      "source": "/Users/naqi.khan/git/prompt/prompt"
+      "source": "/Users/naqi.khan/git/skills/prompt/prompt"
     },
     {
       "name": "prompt-only",
-      "source": "/Users/naqi.khan/git/prompt/prompt-only"
+      "source": "/Users/naqi.khan/git/skills/prompt/prompt-only"
     },
     {
       "name": "prompt-refine",
-      "source": "/Users/naqi.khan/git/prompt/prompt-refine"
+      "source": "/Users/naqi.khan/git/skills/prompt/prompt-refine"
     },
     {
       "name": "review-plan",
-      "source": "/Users/naqi.khan/git/prompt/review-plan"
+      "source": "/Users/naqi.khan/git/skills/prompt/review-plan"
     },
     {
       "name": "rewriter-skill",
