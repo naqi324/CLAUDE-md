@@ -23,7 +23,7 @@
 - When multiple reasonable approaches exist and none is clearly wrong, pick the best one. Only ask when truly irreversible or high-cost.
 
 # Search
-- **Priority**: QMD first (local) -> Brave (web, default) -> WebFetch (known URLs). Run in parallel when both local+web needed.
+- **Priority**: QMD first (local) -> Brave (web discovery) -> Exa (supplementary) -> WebFetch (known URLs). Run in parallel when both local+web needed. When reading a URL's page content, prefer `/url-to-md` over raw WebFetch -- Defuddle strips boilerplate and returns clean markdown with frontmatter.
 - **QMD** (`mcp__qmd__query`): Default first step for ANY information need -- before web searches, before Grep, before asking the user. Indexes: git repos (4900+ files), Obsidian vault (830+ notes), OneDrive work files, Downloads.
   - Sub-queries: `lex` (BM25 keyword, supports `"exact phrases"` and `-negation`), `vec` (semantic), `hyde` (hypothetical doc, 50-100 words). Combine for best recall.
   - Always provide `intent` parameter. For unknown vocabulary, use a standalone natural-language query for auto-expansion.
@@ -33,6 +33,8 @@
 - **Brave** (default): `brave_web_search` (general), `brave_news_search` (current events). Use Brave for all web searches unless a specific Exa capability is needed.
 - **Exa** (supplementary): `web_search_exa` (semantic, use when Brave results lack depth), `get_code_context_exa` (code/API lookups), `company_research_exa` (business intel). Do not use Exa when Brave suffices.
   - Routing: general/news -> Brave | code/API docs -> Exa `get_code_context_exa` | business intel -> Exa `company_research_exa` | Brave poor results -> retry with Exa `web_search_exa`.
+- **URL content** (`/url-to-md`): When you have a specific URL to read (article, docs, blog, changelog), invoke `/url-to-md <URL>` instead of WebFetch. Returns clean markdown with frontmatter (title, source, domain, author, word_count). Reserve WebFetch for: raw API endpoints (JSON/XML), when response headers/status codes are needed, or non-HTML resources.
+- **PDF content** (`/pdf-to-md`): Preferred over the built-in Read tool for PDF files. Auto-selects ODL (fast, text-heavy) or Marker (complex layouts with figures/tables/equations). Use for any PDF -- local files or URLs. Fall back to Read with `pages` param only for: quick spot-checks of a few pages in simple text-only PDFs.
 - **Google Workspace**: 94 tools via `mcp__google__*`. Never guess file IDs -- always search first. Always read before modifying. Search Drive in parallel with QMD when task references docs/spreadsheets.
 
 # Codex MCP
