@@ -1,6 +1,6 @@
 # Claude Code Global Settings
 
-This repository is the tracked authority for the live global Claude Code configuration on this machine.
+This repository is the tracked mirror of the live global Claude Code configuration on this machine.
 
 ## Mirror Contract
 
@@ -9,9 +9,11 @@ These files stay in sync with the live `~/.claude` surfaces:
 - `CLAUDE.md` -> `~/.claude/CLAUDE.md`
 - `.claude/settings.json` -> `~/.claude/settings.json`
 
-The mirrored `settings.json` points Claude Code at one repo-owned hook path:
+The mirrored `settings.json` points Claude Code at one repo-owned hook path and two external Bedrock auth commands:
 
 - `.claude/hooks/ghostty-hook-title.sh` - refreshes the Ghostty pane title after tool use
+- `~/git/system/bedrock-auth-fix/scripts/bedrock-auth-for-claude.sh` - refreshes Claude's Bedrock auth before startup when needed
+- `~/git/system/bedrock-auth-fix/scripts/bedrock-session-check.sh` - validates the Bedrock-backed session on `SessionStart`
 
 That means the repo checkout itself is part of the runtime configuration.
 
@@ -28,6 +30,7 @@ Related Claude surfaces are intentionally owned elsewhere:
 - `~/.claude/skills/` - managed by the Claude skills manifest workflow
 - `~/.claude.json` - managed by the MCP merge workflow
 - `~/.config/personal-mac-bootstrap/ghostty-title.zsh` - managed by `system-backup`
+- `~/git/system/bedrock-auth-fix/` - owns the Bedrock auth helper scripts referenced by `~/.claude/settings.json`
 
 ## Repo Contents
 
@@ -62,9 +65,11 @@ Related Claude surfaces are intentionally owned elsewhere:
    cp ~/git/system/CLAUDE-md/.claude/settings.local.json ~/.claude/settings.local.json
    ```
 
-4. Keep the repo checkout at `~/git/system/CLAUDE-md` unless you also update the hook path in `~/.claude/settings.json`. The runtime settings point at `/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/ghostty-hook-title.sh`.
+4. Keep the repo checkout at `~/git/system/CLAUDE-md` unless you also update the runtime hook path in `~/.claude/settings.json`. The live settings point at `/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/ghostty-hook-title.sh`.
 
-5. Optionally trust your workspace root to suppress Claude's startup trust prompt:
+5. Keep `~/git/system/bedrock-auth-fix` available on machines that use the current live settings, or update the `awsAuthRefresh` and `SessionStart` command paths before copying the tracked mirror into `~/.claude/settings.json`.
+
+6. Optionally trust your workspace root to suppress Claude's startup trust prompt:
 
    ```bash
    chmod +x ~/git/system/CLAUDE-md/scripts/setup-trust.sh
@@ -75,15 +80,22 @@ Related Claude surfaces are intentionally owned elsewhere:
 
 When you change the global config:
 
-1. Edit the repo copy for tracked assets and hook scripts.
-2. Sync the mirrored files into `~/.claude`:
+1. Treat parity as the source of truth, not edit location. If the repo changed first, copy repo to live. If the live files changed first, copy live back into the repo before commit.
+2. Sync the mirrored files into `~/.claude` when the repo is newer:
 
    ```bash
    cp ~/git/system/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
    cp ~/git/system/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
    ```
 
-3. Verify parity before committing:
+3. Or sync the live mirror back into the repo when `~/.claude` is newer:
+
+   ```bash
+   cp ~/.claude/CLAUDE.md ~/git/system/CLAUDE-md/CLAUDE.md
+   cp ~/.claude/settings.json ~/git/system/CLAUDE-md/.claude/settings.json
+   ```
+
+4. Verify parity before committing:
 
    ```bash
    cd ~/git/system/CLAUDE-md
@@ -91,7 +103,7 @@ When you change the global config:
    ./scripts/check-skills-health.sh
    ```
 
-4. If you intentionally edited the live files first, copy them back into the repo before commit so the mirror remains true.
+5. Commit only after the repo and live files match again.
 
 ## MCP Permission Policy
 

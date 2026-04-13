@@ -1,4 +1,5 @@
 {
+  "awsAuthRefresh": "/Users/naqi.khan/git/system/bedrock-auth-fix/scripts/bedrock-auth-for-claude.sh",
   "permissions": {
     "allow": [
       "Read",
@@ -23,23 +24,6 @@
       "mcp__teams__*",
       "mcp__outlook__*",
       "mcp__markitdown__*"
-    ],
-    "ask": [
-      "Read(~/.ssh/**)",
-      "Read(~/.gnupg/**)",
-      "Read(~/.aws/**)",
-      "Read(~/.azure/**)",
-      "Read(~/.kube/**)",
-      "Read(~/.npmrc)",
-      "Read(~/.git-credentials)",
-      "Read(~/.config/gh/**)",
-      "Read(.env)",
-      "Read(./.env)",
-      "Read(*.env)",
-      "Read(**/.env)",
-      "Read(.env.*)",
-      "Read(./.env.*)",
-      "Read(**/.env.*)"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -126,9 +110,26 @@
       "mcp__outlook__outlook_update_event*",
       "mcp__outlook__outlook_set_auto_reply*",
       "mcp__outlook__outlook_respond_event*"
+    ],
+    "ask": [
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.npmrc)",
+      "Read(~/.git-credentials)",
+      "Read(~/.config/gh/**)",
+      "Read(.env)",
+      "Read(./.env)",
+      "Read(*.env)",
+      "Read(**/.env)",
+      "Read(.env.*)",
+      "Read(./.env.*)",
+      "Read(**/.env.*)"
     ]
   },
-  "model": "us.anthropic.claude-opus-4-6-v1[1m]",
+  "model": "opus[1m]",
   "hooks": {
     "PostToolUse": [
       {
@@ -136,6 +137,17 @@
           {
             "type": "command",
             "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/ghostty-hook-title.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/naqi.khan/git/system/bedrock-auth-fix/scripts/bedrock-session-check.sh",
+            "timeout": 15
           }
         ]
       }
@@ -152,6 +164,14 @@
     "claude-md-management@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true
   },
+  "effortLevel": "max",
   "defaultMode": "plan",
-  "effortLevel": "high"
+  "env": {
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "AWS_REGION": "us-east-1",
+    "AWS_PROFILE": "hearst_mcg_bedrock_user",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "us.anthropic.claude-opus-4-6-v1",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+  }
 }

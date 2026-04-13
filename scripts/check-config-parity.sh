@@ -1,6 +1,6 @@
 #!/bin/sh
 # Verify that tracked repo mirrors match the live ~/.claude surfaces and that
-# every command referenced by settings.json exists and is executable.
+# every executable path referenced by settings.json exists and is executable.
 
 set -eu
 
@@ -69,7 +69,10 @@ check_command_targets() {
         return
     fi
     targets_file=$(mktemp)
-    jq -r '.. | objects | select(has("command")) | .command' "$settings_file" > "$targets_file"
+    jq -r '
+        [(.awsAuthRefresh // empty), (.. | objects | select(has("command")) | .command)]
+        | .[]
+    ' "$settings_file" > "$targets_file"
     while IFS= read -r command; do
         [ -n "$command" ] || continue
         if ! target="$(resolve_command_path "$command")"; then
