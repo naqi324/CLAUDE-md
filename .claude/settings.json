@@ -20,7 +20,26 @@
       "mcp__google__*",
       "mcp__codex__*",
       "mcp__slack__*",
-      "mcp__teams__*"
+      "mcp__teams__*",
+      "mcp__outlook__*",
+      "mcp__markitdown__*"
+    ],
+    "ask": [
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.npmrc)",
+      "Read(~/.git-credentials)",
+      "Read(~/.config/gh/**)",
+      "Read(.env)",
+      "Read(./.env)",
+      "Read(*.env)",
+      "Read(**/.env)",
+      "Read(.env.*)",
+      "Read(./.env.*)",
+      "Read(**/.env.*)"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -90,7 +109,23 @@
       "mcp__teams__teams_create_chat*",
       "mcp__teams__teams_delete_message*",
       "mcp__teams__teams_update_message*",
-      "mcp__teams__teams_archive_*"
+      "mcp__teams__teams_archive_*",
+      "mcp__outlook__outlook_send_email*",
+      "mcp__outlook__outlook_send_draft*",
+      "mcp__outlook__outlook_send_shared_email*",
+      "mcp__outlook__outlook_reply_to_email*",
+      "mcp__outlook__outlook_reply_shared_email*",
+      "mcp__outlook__outlook_forward_email*",
+      "mcp__outlook__outlook_delete_email*",
+      "mcp__outlook__outlook_delete_event*",
+      "mcp__outlook__outlook_delete_folder*",
+      "mcp__outlook__outlook_delete_category*",
+      "mcp__outlook__outlook_delete_rule*",
+      "mcp__outlook__outlook_create_event*",
+      "mcp__outlook__outlook_create_shared_event*",
+      "mcp__outlook__outlook_update_event*",
+      "mcp__outlook__outlook_set_auto_reply*",
+      "mcp__outlook__outlook_respond_event*"
     ]
   },
   "model": "us.anthropic.claude-opus-4-6-v1[1m]",
@@ -100,76 +135,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/naqi.khan/git/system/shell-profiles/zsh/ghostty-hook-title.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Agent",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/plan-mode-agent-nudge.sh"
-          }
-        ]
-      }
-    ],
-  "PreCompact": [
-    {
-      "hooks": [
-        {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/skills/llm-history/scripts/llm-history-save.sh",
-            "timeout": 120,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/inject-datetime.sh"
-          }
-        ]
-      }
-    ],
-  "SessionEnd": [
-    {
-      "hooks": [
-        {
-          "type": "command",
-          "command": "/Users/naqi.khan/git/skills/llm-history/scripts/exit-orchestrator.sh",
-          "timeout": 240
-        }
-      ]
-    }
-  ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/mcps/qmd/scripts/qmd-session-warmup.sh",
-            "timeout": 5
-          },
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/.claude/hooks/ensure-state-gitignore.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "ExitPlanMode",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/require-innovation.sh"
+            "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/ghostty-hook-title.sh"
           }
         ]
       }

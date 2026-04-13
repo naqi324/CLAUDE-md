@@ -1,24 +1,42 @@
 # Claude Code Global Settings
 
-This repository is the tracked mirror for the live global Claude Code configuration on this machine.
+This repository is the tracked authority for the live global Claude Code configuration on this machine.
 
 ## Mirror Contract
 
-These files are intended to stay in sync with the live `~/.claude` surfaces:
+These files stay in sync with the live `~/.claude` surfaces:
 
 - `CLAUDE.md` -> `~/.claude/CLAUDE.md`
 - `.claude/settings.json` -> `~/.claude/settings.json`
 
-The hook scripts live in this repo under `.claude/hooks/`, and the mirrored `settings.json` points Claude Code at these repo paths directly. That means the repo checkout itself is part of the runtime configuration.
+The mirrored `settings.json` points Claude Code at one repo-owned hook path:
+
+- `.claude/hooks/ghostty-hook-title.sh` - refreshes the Ghostty pane title after tool use
+
+That means the repo checkout itself is part of the runtime configuration.
+
+## Authority Boundaries
+
+`CLAUDE-md` owns only these live files:
+
+- `~/.claude/CLAUDE.md`
+- `~/.claude/settings.json`
+
+Related Claude surfaces are intentionally owned elsewhere:
+
+- `~/.claude/statusline.sh` - managed by `~/git/system/system-backup`
+- `~/.claude/skills/` - managed by the Claude skills manifest workflow
+- `~/.claude.json` - managed by the MCP merge workflow
+- `~/.config/personal-mac-bootstrap/ghostty-title.zsh` - managed by `system-backup`
 
 ## Repo Contents
 
 - `CLAUDE.md` - tracked mirror of the live global Claude instructions
 - `.claude/settings.json` - tracked mirror of the live global Claude settings
-- `.claude/hooks/` - versioned hook scripts executed from repo paths
+- `.claude/hooks/` - versioned runtime hook scripts
 - `.claude/skills-manifest.json` - canonical global Claude skill link targets
 - `.state/progress.md` - rolling session progress log
-- `scripts/check-config-parity.sh` - verifies repo/live mirror parity and hook target existence
+- `scripts/check-config-parity.sh` - verifies repo/live mirror parity and validates referenced command targets
 - `scripts/reconcile-skills.sh` - repairs `~/.claude/skills` symlinks from the manifest
 - `scripts/check-skills-health.sh` - validates skill links and required frontmatter
 - `scripts/setup-trust.sh` - suppresses the workspace trust prompt
@@ -44,7 +62,7 @@ The hook scripts live in this repo under `.claude/hooks/`, and the mirrored `set
    cp ~/git/system/CLAUDE-md/.claude/settings.local.json ~/.claude/settings.local.json
    ```
 
-4. Keep the repo checkout at `~/git/system/CLAUDE-md` unless you also update the hook paths in `~/.claude/settings.json`. The runtime settings point at repo hook scripts such as `/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/inject-datetime.sh`.
+4. Keep the repo checkout at `~/git/system/CLAUDE-md` unless you also update the hook path in `~/.claude/settings.json`. The runtime settings point at `/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/ghostty-hook-title.sh`.
 
 5. Optionally trust your workspace root to suppress Claude's startup trust prompt:
 

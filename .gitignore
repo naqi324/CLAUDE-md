@@ -4,8 +4,9 @@
 .LSOverride
 
 # Secrets and sensitive files
-*.env
-*.env.*
+.env*
+!.env.example
+!.env.template
 *.key
 *.pem
 *.p12
@@ -13,7 +14,10 @@
 credentials.json
 service-account*.json
 *secret*
+*credential*
 token.json
+.htpasswd
+.netrc
 
 # IDE
 .vscode/
@@ -28,3 +32,8 @@ token.json
 
 # Auto-generated session context
 .claude/local-context.md
+
+# State artifacts
+.state/*
+!.state/.gitignore
+!.state/progress.md
