@@ -27,8 +27,11 @@ That means the repo checkout itself is part of the runtime configuration.
 Related Claude surfaces are intentionally owned elsewhere:
 
 - `~/.claude/statusline.sh` - managed by `~/git/system/system-backup`
-- `~/.claude/skills/` - managed by the Claude skills manifest workflow
-- `~/.claude.json` - managed by the MCP merge workflow
+- `~/.claude/skills/` - managed by `~/git/system/system-backup/manifests/claude-sources.json`
+- `~/.claude.json` - managed by the `system-backup` MCP merge workflow
+- `~/Library/Application Support/Claude/claude_desktop_config.json` - managed by `system-backup`
+- `~/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/` - validated by `system-backup` against the same custom-skill inventory
+- `claude.ai` remote connectors - account-scoped and not managed from local config files
 - `~/.config/personal-mac-bootstrap/ghostty-title.zsh` - managed by `system-backup`
 - `~/git/system/bedrock-auth-fix/` - owns the Bedrock auth helper scripts referenced by `~/.claude/settings.json`
 
@@ -37,11 +40,11 @@ Related Claude surfaces are intentionally owned elsewhere:
 - `CLAUDE.md` - tracked mirror of the live global Claude instructions
 - `.claude/settings.json` - tracked mirror of the live global Claude settings
 - `.claude/hooks/` - versioned runtime hook scripts
-- `.claude/skills-manifest.json` - canonical global Claude skill link targets
 - `.state/progress.md` - rolling session progress log
 - `scripts/check-config-parity.sh` - verifies repo/live mirror parity and validates referenced command targets
-- `scripts/reconcile-skills.sh` - repairs `~/.claude/skills` symlinks from the manifest
-- `scripts/check-skills-health.sh` - validates skill links and required frontmatter
+- `scripts/skill-manifest.py` - resolves the canonical skill manifest, with explicit legacy-manifest compatibility
+- `scripts/reconcile-skills.sh` - repairs `~/.claude/skills` symlinks from the canonical manifest
+- `scripts/check-skills-health.sh` - validates skill links, required frontmatter, and retired-name cleanup
 - `scripts/setup-trust.sh` - suppresses the workspace trust prompt
 
 ## Setup On A New Machine
@@ -69,7 +72,9 @@ Related Claude surfaces are intentionally owned elsewhere:
 
 5. Keep `~/git/system/bedrock-auth-fix` available on machines that use the current live settings, or update the `awsAuthRefresh` and `SessionStart` command paths before copying the tracked mirror into `~/.claude/settings.json`.
 
-6. Optionally trust your workspace root to suppress Claude's startup trust prompt:
+6. Keep `~/git/system/system-backup` available if you want the skill and MCP wrapper commands in this repo to work. They default to the sibling canonical manifest and managed MCP templates owned there.
+
+7. Optionally trust your workspace root to suppress Claude's startup trust prompt:
 
    ```bash
    chmod +x ~/git/system/CLAUDE-md/scripts/setup-trust.sh
@@ -139,7 +144,7 @@ The audit reads installed MCP servers from `~/.claude.json`, inspects both repo 
 
 ## Skills Reconciliation
 
-This repo includes a manifest-driven workflow for global Claude custom skills.
+These wrapper commands read the canonical manifest from `~/git/system/system-backup/manifests/claude-sources.json` by default. You can still pass an explicit legacy manifest path if needed.
 
 Commands:
 
@@ -149,7 +154,7 @@ cd ~/git/system/CLAUDE-md
 ./scripts/check-skills-health.sh
 ```
 
-This keeps `~/.claude/skills` symlinks aligned with the canonical local repositories.
+This keeps `~/.claude/skills` symlinks aligned with the canonical local repositories while ensuring retired skill names do not linger.
 
 ## Security Notes
 
