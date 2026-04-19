@@ -23,7 +23,8 @@
       "mcp__slack__*",
       "mcp__teams__*",
       "mcp__outlook__*",
-      "mcp__markitdown__*"
+      "mcp__markitdown__*",
+      "mcp__linkedin_mcp__*"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -109,7 +110,9 @@
       "mcp__outlook__outlook_create_shared_event*",
       "mcp__outlook__outlook_update_event*",
       "mcp__outlook__outlook_set_auto_reply*",
-      "mcp__outlook__outlook_respond_event*"
+      "mcp__outlook__outlook_respond_event*",
+      "mcp__linkedin_mcp__connect_with_person*",
+      "mcp__linkedin_mcp__send_message*"
     ],
     "ask": [
       "Read(~/.ssh/**)",
@@ -164,14 +167,17 @@
     "claude-md-management@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true
   },
-  "effortLevel": "max",
   "defaultMode": "plan",
   "env": {
     "CLAUDE_CODE_USE_BEDROCK": "1",
     "AWS_REGION": "us-east-1",
     "AWS_PROFILE": "hearst_mcg_bedrock_user",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "us.anthropic.claude-opus-4-6-v1",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "us.anthropic.claude-opus-4-7[1m]",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
+    "CLAUDE_CODE_EFFORT_LEVEL": "max",
+    "CLAUDE_CODE_NO_FLICKER": "1"
   }
 }
