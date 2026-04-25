@@ -1,5 +1,4 @@
 {
-  "awsAuthRefresh": "/Users/naqi.khan/git/system/bedrock-auth-fix/scripts/bedrock-auth-for-claude.sh",
   "permissions": {
     "allow": [
       "Read",
@@ -140,17 +139,6 @@
           {
             "type": "command",
             "command": "/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/ghostty-hook-title.sh"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/naqi.khan/git/system/bedrock-auth-fix/scripts/bedrock-session-check.sh",
-            "timeout": 15
           }
         ]
       }

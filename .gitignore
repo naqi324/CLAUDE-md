@@ -37,3 +37,6 @@ token.json
 .state/*
 !.state/.gitignore
 !.state/progress.md
+
+# Timestamped backup files from cleanup scripts
+*.pre-*-removal.*
