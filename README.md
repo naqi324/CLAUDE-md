@@ -9,11 +9,9 @@ These files stay in sync with the live `~/.claude` surfaces:
 - `CLAUDE.md` -> `~/.claude/CLAUDE.md`
 - `.claude/settings.json` -> `~/.claude/settings.json`
 
-The mirrored `settings.json` points Claude Code at one repo-owned hook path and two external Bedrock auth commands:
+The mirrored `settings.json` points Claude Code at one repo-owned hook path:
 
 - `.claude/hooks/ghostty-hook-title.sh` - refreshes the Ghostty pane title after tool use
-- `~/git/system/bedrock-auth-fix/scripts/bedrock-auth-for-claude.sh` - refreshes Claude's Bedrock auth before startup when needed
-- `~/git/system/bedrock-auth-fix/scripts/bedrock-session-check.sh` - validates the Bedrock-backed session on `SessionStart`
 
 That means the repo checkout itself is part of the runtime configuration.
 
@@ -33,7 +31,6 @@ Related Claude surfaces are intentionally owned elsewhere:
 - `~/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/` - validated by `system-backup` against the same custom-skill inventory
 - `claude.ai` remote connectors - account-scoped and not managed from local config files
 - `~/.config/personal-mac-bootstrap/ghostty-title.zsh` - managed by `system-backup`
-- `~/git/system/bedrock-auth-fix/` - owns the Bedrock auth helper scripts referenced by `~/.claude/settings.json`
 
 ## Repo Contents
 
@@ -70,11 +67,9 @@ Related Claude surfaces are intentionally owned elsewhere:
 
 4. Keep the repo checkout at `~/git/system/CLAUDE-md` unless you also update the runtime hook path in `~/.claude/settings.json`. The live settings point at `/Users/naqi.khan/git/system/CLAUDE-md/.claude/hooks/ghostty-hook-title.sh`.
 
-5. Keep `~/git/system/bedrock-auth-fix` available on machines that use the current live settings, or update the `awsAuthRefresh` and `SessionStart` command paths before copying the tracked mirror into `~/.claude/settings.json`.
+5. Keep `~/git/system/system-backup` available if you want the skill and MCP wrapper commands in this repo to work. They default to the sibling canonical manifest and managed MCP templates owned there.
 
-6. Keep `~/git/system/system-backup` available if you want the skill and MCP wrapper commands in this repo to work. They default to the sibling canonical manifest and managed MCP templates owned there.
-
-7. Optionally trust your workspace root to suppress Claude's startup trust prompt:
+6. Optionally trust your workspace root to suppress Claude's startup trust prompt:
 
    ```bash
    chmod +x ~/git/system/CLAUDE-md/scripts/setup-trust.sh
@@ -121,7 +116,7 @@ Default read-only MCP rule:
 
 Current policy intent:
 
-- Whole-server wildcards remain allowed for `qmd`, `mail`, `browser-mcp`, `atlassian`, `brave-search`, `exa`, `google`, and `codex`
+- Whole-server wildcards remain allowed for `qmd`, `browser-mcp`, `atlassian`, `brave`, `google`, and `codex`
 - Partially gated namespaces should use explicit read-only allow entries only
 - Slack is the reference partially gated namespace: non-admin `search_*`, `list_*`, `get_*`, and `find_*` are allowed; admin reads and all state-changing actions remain gated
 - When you launch Claude inside an MCP repo, project-level `.claude/settings.json` or `.claude/settings.local.json` files can carry stale exact-tool allowlists that lag behind the global safe-read baseline

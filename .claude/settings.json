@@ -12,18 +12,17 @@
       "Bash",
       "Skill",
       "mcp__qmd__*",
-      "mcp__mail__*",
       "mcp__browser-mcp__*",
       "mcp__plugin_atlassian_atlassian__*",
-      "mcp__brave-search__*",
-      "mcp__exa__*",
+      "mcp__brave__*",
       "mcp__google__*",
       "mcp__codex__*",
       "mcp__slack__*",
       "mcp__teams__*",
       "mcp__outlook__*",
       "mcp__markitdown__*",
-      "mcp__linkedin_mcp__*"
+      "mcp__linkedin-mcp__*",
+      "mcp__allego__*"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -110,8 +109,14 @@
       "mcp__outlook__outlook_update_event*",
       "mcp__outlook__outlook_set_auto_reply*",
       "mcp__outlook__outlook_respond_event*",
-      "mcp__linkedin_mcp__connect_with_person*",
-      "mcp__linkedin_mcp__send_message*"
+      "mcp__linkedin-mcp__connect_with_person*",
+      "mcp__linkedin-mcp__send_message*",
+      "mcp__allego__allego_create_content*",
+      "mcp__allego__allego_create_digital_room*",
+      "mcp__allego__allego_complete_task*",
+      "mcp__allego__allego_share_content*",
+      "mcp__allego__allego_update_favorite*",
+      "mcp__allego__allego_ui_execute*"
     ],
     "ask": [
       "Read(~/.ssh/**)",

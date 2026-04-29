@@ -238,7 +238,7 @@
 - Wired Slack in as the reference partially gated namespace with current non-admin read-only coverage, admin read exclusions, and intentionally gated state-changing tools.
 
 **Validation**:
-- The audit script should show whole-server wildcards for `qmd`, `mail`, `browser-mcp`, `atlassian`, `brave-search`, `exa`, `google`, and `codex`.
+- The audit script should show whole-server wildcards for `qmd`, `mail`, `browser-mcp`, `atlassian`, `brave`, `exa`, `google`, and `codex`.
 - The first audit run surfaced two uncovered safe read-only Slack tools: `slack_find_people` and `slack_find_conversations`.
 - Broadened the Slack read-only allow entry from `mcp__slack__slack_find_user_by_email` to `mcp__slack__slack_find_*` in both repo and live settings mirrors.
 - The final Slack section should show non-admin read-only tools as covered, admin reads as intentionally excluded, and state-changing tools as intentionally gated.
