@@ -1,4 +1,10 @@
 {
+  "env": {
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
+    "CLAUDE_CODE_EFFORT_LEVEL": "high",
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000"
+  },
   "permissions": {
     "allow": [
       "Read",
@@ -12,17 +18,19 @@
       "Bash",
       "Skill",
       "mcp__qmd__*",
-      "mcp__browser-mcp__*",
       "mcp__plugin_atlassian_atlassian__*",
       "mcp__brave__*",
-      "mcp__google__*",
       "mcp__codex__*",
       "mcp__slack__*",
       "mcp__teams__*",
       "mcp__outlook__*",
       "mcp__markitdown__*",
-      "mcp__linkedin-mcp__*",
-      "mcp__allego__*"
+      "mcp__imcg-um__*",
+      "mcp__plugin_mcg-allego-mcp_mcg-allego-mcp__*",
+      "mcp__plugin_linkedin-mcp_linkedin-mcp__*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__*",
+      "mcp__plugin_mcg-sf-mcp_mcg-sf-mcp__*",
+      "mcp__plugin_mcg-concur-mcp_mcg-concur-mcp__*"
     ],
     "deny": [
       "Bash(git push --force *)",
@@ -111,12 +119,41 @@
       "mcp__outlook__outlook_respond_event*",
       "mcp__linkedin-mcp__connect_with_person*",
       "mcp__linkedin-mcp__send_message*",
-      "mcp__allego__allego_create_content*",
-      "mcp__allego__allego_create_digital_room*",
-      "mcp__allego__allego_complete_task*",
-      "mcp__allego__allego_share_content*",
-      "mcp__allego__allego_update_favorite*",
-      "mcp__allego__allego_ui_execute*"
+      "mcp__plugin_linkedin-mcp_linkedin-mcp__connect_with_person*",
+      "mcp__plugin_linkedin-mcp_linkedin-mcp__send_message*",
+      "mcp__plugin_mcg-allego-mcp_mcg-allego-mcp__import*",
+      "mcp__plugin_mcg-allego-mcp_mcg-allego-mcp__sync*",
+      "mcp__plugin_mcg-allego-mcp_mcg-allego-mcp__assessments_execute*",
+      "mcp__plugin_mcg-allego-mcp_mcg-allego-mcp__workflow_archive*",
+      "mcp__plugin_mcg-sf-mcp_mcg-sf-mcp__import*",
+      "mcp__plugin_mcg-sf-mcp_mcg-sf-mcp__sync*",
+      "mcp__plugin_mcg-sf-mcp_mcg-sf-mcp__workflow_archive*",
+      "mcp__plugin_mcg-concur-mcp_mcg-concur-mcp__concur_sync*",
+      "mcp__plugin_mcg-concur-mcp_mcg-concur-mcp__concur_reports_resolve*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__send-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__create-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__update-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__delete-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__reply-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__forward-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__copy-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__move-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__accept-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__decline-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__tentatively-accept-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__cancel-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__add-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__remove-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__pin-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__unpin-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__set-*-reaction",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__unset-*-reaction",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__respond-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__dismiss-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__snooze-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__reauthorize-*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__logout*",
+      "mcp__plugin_mcg-ms365-mcp_mcg-ms365-mcp__graph-batch*"
     ],
     "ask": [
       "Read(~/.ssh/**)",
@@ -133,10 +170,13 @@
       "Read(**/.env)",
       "Read(.env.*)",
       "Read(./.env.*)",
-      "Read(**/.env.*)"
+      "Read(**/.env.*)",
+      "mcp__plugin_mcg-sf-mcp_mcg-sf-mcp__salesforce_execute*",
+      "mcp__plugin_mcg-sf-mcp_mcg-sf-mcp__sql*",
+      "mcp__plugin_mcg-allego-mcp_mcg-allego-mcp__sql*"
     ]
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -158,19 +198,22 @@
     "atlassian@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true
+    "code-simplifier@claude-plugins-official": true,
+    "mcg-allego-mcp@mcg-product-plugins": true,
+    "make-mcg-slides@mcg-product-plugins": true,
+    "mcg-sf-mcp@mcg-product-plugins": true,
+    "mcg-concur-mcp@mcg-product-plugins": true,
+    "linkedin-mcp@mcg-product-plugins": true,
+    "mcg-ms365-mcp@mcg-product-plugins": true
   },
-  "defaultMode": "plan",
-  "env": {
-    "CLAUDE_CODE_USE_BEDROCK": "1",
-    "AWS_REGION": "us-east-1",
-    "AWS_PROFILE": "hearst_mcg_bedrock_user",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "us.anthropic.claude-opus-4-7[1m]",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
-    "CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING": "1",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet",
-    "CLAUDE_CODE_EFFORT_LEVEL": "max",
-    "CLAUDE_CODE_NO_FLICKER": "1"
-  }
+  "extraKnownMarketplaces": {
+    "mcg-product-plugins": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/naqi.khan/.mcg-product-plugins/marketplace"
+      }
+    }
+  },
+  "preferredNotifChannel": "ghostty",
+  "defaultMode": "plan"
 }

@@ -7,6 +7,7 @@ This repository is the tracked mirror of the live global Claude Code configurati
 These files stay in sync with the live `~/.claude` surfaces:
 
 - `CLAUDE.md` -> `~/.claude/CLAUDE.md`
+- `RTK.md` -> `~/.claude/RTK.md` (included by `CLAUDE.md` via `@RTK.md`)
 - `.claude/settings.json` -> `~/.claude/settings.json`
 
 The mirrored `settings.json` points Claude Code at one repo-owned hook path:
@@ -20,6 +21,7 @@ That means the repo checkout itself is part of the runtime configuration.
 `CLAUDE-md` owns only these live files:
 
 - `~/.claude/CLAUDE.md`
+- `~/.claude/RTK.md`
 - `~/.claude/settings.json`
 
 Related Claude surfaces are intentionally owned elsewhere:
@@ -35,6 +37,7 @@ Related Claude surfaces are intentionally owned elsewhere:
 ## Repo Contents
 
 - `CLAUDE.md` - tracked mirror of the live global Claude instructions
+- `RTK.md` - tracked mirror of the live RTK reference, @-included by `CLAUDE.md`
 - `.claude/settings.json` - tracked mirror of the live global Claude settings
 - `.claude/hooks/` - versioned runtime hook scripts
 - `.state/progress.md` - rolling session progress log
@@ -56,6 +59,7 @@ Related Claude surfaces are intentionally owned elsewhere:
 
    ```bash
    cp ~/git/system/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
+   cp ~/git/system/CLAUDE-md/RTK.md ~/.claude/RTK.md
    cp ~/git/system/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
    ```
 
@@ -85,6 +89,7 @@ When you change the global config:
 
    ```bash
    cp ~/git/system/CLAUDE-md/CLAUDE.md ~/.claude/CLAUDE.md
+   cp ~/git/system/CLAUDE-md/RTK.md ~/.claude/RTK.md
    cp ~/git/system/CLAUDE-md/.claude/settings.json ~/.claude/settings.json
    ```
 
@@ -92,6 +97,7 @@ When you change the global config:
 
    ```bash
    cp ~/.claude/CLAUDE.md ~/git/system/CLAUDE-md/CLAUDE.md
+   cp ~/.claude/RTK.md ~/git/system/CLAUDE-md/RTK.md
    cp ~/.claude/settings.json ~/git/system/CLAUDE-md/.claude/settings.json
    ```
 

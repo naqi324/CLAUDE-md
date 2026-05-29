@@ -15,5 +15,10 @@
 - Run `gitleaks detect` before pushing meaningful changes
 
 # Local Environment
-- This is a personal-only profile
-- No enterprise auth or work-only hooks belong here
+- Personal machine that also runs MCG enterprise tooling (Allego, Salesforce, Concur, LinkedIn, MS365 plugins)
+- Keep personal and work config separated; never hardcode work secrets into shared or tracked files
+
+# MCP Tool Preferences
+- Atlassian: prefer `mcp__plugin_atlassian_atlassian__*` tools over `mcp__claude_ai_Atlassian__*`. Both resolve to the same `https://mcp.atlassian.com/v1/mcp` endpoint; the plugin is the canonical install via `claude-plugins-official`. This applies to subagents spawned via the `Agent` tool as well.
+
+@RTK.md
